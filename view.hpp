@@ -55,8 +55,8 @@ void makeProjection( int viewMode )
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();
 
-    double w =  (double)windowWidth;
-    double h =  (double)windowHeight;
+    float w =  (float)windowWidth;
+    float h =  (float)windowHeight;
 
     if( viewMode <= OrthoZ ) // OrthoX, OrthoY, OrthoZ
     {

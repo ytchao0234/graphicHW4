@@ -1,14 +1,22 @@
 pair<int, int> floorSize = { 180, 180 };
 int viewSize = 20;
 
-vector<vector<vector<double>>> floorColor( floorSize.first + 1, 
-                                           vector<vector<double>>( floorSize.second + 1 ));
+vector<vector<vector<float>>> floorColor( floorSize.first + 1, 
+                                           vector<vector<float>>( floorSize.second + 1 ));
 
-vector<vector<double>> fishPara(15, vector<double>(8));
-vector<vector<vector<double>>> fishBlock(15, vector<vector<double>>(3, vector<double>(8)));
-vector<vector<double>> stonePara(15, vector<double>(6));
-vector<vector<vector<double>>> stoneBlock(15, vector<vector<double>>(3, vector<double>(8)));
-vector<vector<double>> seaweedPara(20, vector<double>(6));
+vector<vector<float>> fishPara(15, vector<float>(8));
+vector<vector<vector<float>>> fishBlock(15, vector<vector<float>>(3, vector<float>(8)));
+vector<vector<float>> stonePara(15, vector<float>(6));
+vector<vector<vector<float>>> stoneBlock(15, vector<vector<float>>(3, vector<float>(8)));
+vector<vector<float>> seaweedPara(20, vector<float>(6));
+
+float WCSambient[4][4] = 
+{
+    { 1.0, 1.0, 1.0, 1.0 },
+    { 0.0, 1.0, 1.0, 1.0 },
+    { 1.0, 0.0, 1.0, 1.0 },
+    { 1.0, 1.0, 0.0, 1.0 }
+};
 
 void drawScene()
 {
@@ -23,20 +31,21 @@ void drawWCS()
 {
     glPushMatrix();
 
-        glColor3f( 1.0, 1.0, 1.0 );
+        glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, WCSambient[0] );
+
         gluSphere( sphere, 2.0, 12, 12 );
 
-        glColor3f( 0.0, 1.0, 1.0 );
+        glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, WCSambient[1] );
         gluCylinder( cylinder, 0.5, 0.5, 10, 12, 3 );
 
         glPushMatrix();
-            glColor3f( 1.0, 0.0, 1.0 );
+        glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, WCSambient[2] );
             glRotatef( -90.0, 1.0, 0.0, 0.0 );
             gluCylinder( cylinder, 0.5, 0.5, 10, 12, 3 );
         glPopMatrix();
 
         glPushMatrix();
-            glColor3f( 1.0, 1.0, 0.0 );
+        glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, WCSambient[3] );
             glRotatef( 90.0, 0.0, 1.0, 0.0 );
             gluCylinder( cylinder, 0.5, 0.5, 10, 12, 3 );
         glPopMatrix();
@@ -44,22 +53,22 @@ void drawWCS()
     glPopMatrix();
 }
 
-vector<double> randomColor( bool forFloor )
+vector<float> randomColor( bool forFloor )
 {
-    static constexpr double colors[4][3] = 
-        { { 0.15, 0.20, 0.10 },
-          { 0.10, 0.22, 0.22 },
-          { 0.10, 0.15, 0.10 },
-          { 0.10, 0.12, 0.05 }};
+    static constexpr float colors[4][4] = 
+        { { 0.25, 0.30, 0.20, 1.0 },
+          { 0.20, 0.32, 0.32, 1.0 },
+          { 0.20, 0.25, 0.20, 1.0 },
+          { 0.20, 0.22, 0.15, 1.0 }};
 
     int r = (rand() / (RAND_MAX + 1.0)) * 4;
     
-    vector<double> color;
+    vector<float> color;
 
     if( forFloor )
         color =  { colors[r][0], colors[r][1], colors[r][2] };
     else 
-        color = { (double)rand() / RAND_MAX, (double)rand() / RAND_MAX, (double)rand() / RAND_MAX };
+        color = { (float)rand() / RAND_MAX, (float)rand() / RAND_MAX, (float)rand() / RAND_MAX };
 
     return color;
 }
@@ -91,29 +100,29 @@ void drawFloor()
             int fj = j + floorSize.second / 2;
             
             glBegin(GL_POLYGON);
-                glColor3f( floorColor[fi][fj][0], floorColor[fi][fj][1], floorColor[fi][fj][2] );
+                glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, &(floorColor[fi][fj][0]) );
                 glVertex3f( i * 10, 0, j * 10 );
 
-                glColor3f( floorColor[fi][fj + 1][0], floorColor[fi][fj + 1][1], floorColor[fi][fj + 1][2] );
+                glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, &(floorColor[fi][fj + 1][0]) );
                 glVertex3f( i * 10, 0, (j + 1) * 10 );
 
-                glColor3f( floorColor[fi + 1][fj + 1][0], floorColor[fi + 1][fj + 1][1], floorColor[fi + 1][fj + 1][2 ]);
+                glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, &(floorColor[fi + 1][fj + 1][0]) );
                 glVertex3f( (i + 1) * 10, 0, (j + 1) * 10 );
 
-                glColor3f( floorColor[fi + 1][fj][0], floorColor[fi + 1][fj][1], floorColor[fi + 1][fj][2] );
+                glMaterialfv( GL_FRONT, GL_AMBIENT_AND_DIFFUSE, &(floorColor[fi + 1][fj][0]) );
                 glVertex3f( (i + 1) * 10, 0, j * 10 );
             glEnd();
         }
     }
 }
 
-vector<double> randomPos()
+vector<float> randomPos()
 {
-    double rx = (rand() / (RAND_MAX + 1.0)) * 1700;
-    double ry = (rand() / (RAND_MAX + 1.0)) * 200 + 30;
-    double rz = (rand() / (RAND_MAX + 1.0)) * 1700;
+    float rx = (rand() / (RAND_MAX + 1.0)) * 1700;
+    float ry = (rand() / (RAND_MAX + 1.0)) * 200 + 30;
+    float rz = (rand() / (RAND_MAX + 1.0)) * 1700;
     
-    vector<double> position;
+    vector<float> position;
 
     if( rx > 850 ) rx = 850 - rx;
     if( rz > 850 ) rz = 850 - rz;
@@ -135,38 +144,38 @@ void initFishBlock( int i )
 
     fishBlock[i][0] = 
     {
-        fishPara[i][0] + fishPara[i][4] * (0.7 * sin( fishPara[i][3] * PI / 180.0) + 0.125 * cos( fishPara[i][3] * PI / 180.0 )),
-        fishPara[i][0] + fishPara[i][4] * (0.7 * sin( fishPara[i][3] * PI / 180.0) - 0.125 * cos( fishPara[i][3] * PI / 180.0 )),
-        fishPara[i][0] + fishPara[i][4] * (-0.5 * sin( fishPara[i][3] * PI / 180.0) + 0.125 * cos( fishPara[i][3] * PI / 180.0 )),
-        fishPara[i][0] + fishPara[i][4] * (-0.5 * sin( fishPara[i][3] * PI / 180.0) - 0.125 * cos( fishPara[i][3] * PI / 180.0 )),
-        fishPara[i][0] + fishPara[i][4] * (0.7 * sin( fishPara[i][3] * PI / 180.0) + 0.125 * cos( fishPara[i][3] * PI / 180.0 )),
-        fishPara[i][0] + fishPara[i][4] * (0.7 * sin( fishPara[i][3] * PI / 180.0) - 0.125 * cos( fishPara[i][3] * PI / 180.0 )), 
-        fishPara[i][0] + fishPara[i][4] * (-0.5 * sin( fishPara[i][3] * PI / 180.0) + 0.125 * cos( fishPara[i][3] * PI / 180.0 )),
-        fishPara[i][0] + fishPara[i][4] * (-0.5 * sin( fishPara[i][3] * PI / 180.0) - 0.125 * cos( fishPara[i][3] * PI / 180.0 ))
+        fishPara[i][0] + fishPara[i][4] * ((float)0.7  * sinf( fishPara[i][3] * PI / 180.0) + (float)0.125 * cosf( fishPara[i][3] * PI / 180.0 )),
+        fishPara[i][0] + fishPara[i][4] * ((float)0.7  * sinf( fishPara[i][3] * PI / 180.0) - (float)0.125 * cosf( fishPara[i][3] * PI / 180.0 )),
+        fishPara[i][0] + fishPara[i][4] * ((float)-0.5 * sinf( fishPara[i][3] * PI / 180.0) + (float)0.125 * cosf( fishPara[i][3] * PI / 180.0 )),
+        fishPara[i][0] + fishPara[i][4] * ((float)-0.5 * sinf( fishPara[i][3] * PI / 180.0) - (float)0.125 * cosf( fishPara[i][3] * PI / 180.0 )),
+        fishPara[i][0] + fishPara[i][4] * ((float)0.7  * sinf( fishPara[i][3] * PI / 180.0) + (float)0.125 * cosf( fishPara[i][3] * PI / 180.0 )),
+        fishPara[i][0] + fishPara[i][4] * ((float)0.7  * sinf( fishPara[i][3] * PI / 180.0) - (float)0.125 * cosf( fishPara[i][3] * PI / 180.0 )), 
+        fishPara[i][0] + fishPara[i][4] * ((float)-0.5 * sinf( fishPara[i][3] * PI / 180.0) + (float)0.125 * cosf( fishPara[i][3] * PI / 180.0 )),
+        fishPara[i][0] + fishPara[i][4] * ((float)-0.5 * sinf( fishPara[i][3] * PI / 180.0) - (float)0.125 * cosf( fishPara[i][3] * PI / 180.0 ))
     };
 
     fishBlock[i][1] = 
     {
-        fishPara[i][1] + fishPara[i][4] * 0.3,
-        fishPara[i][1] + fishPara[i][4] * 0.3,
-        fishPara[i][1] + fishPara[i][4] * 0.3,
-        fishPara[i][1] + fishPara[i][4] * 0.3,
-        fishPara[i][1] + fishPara[i][4] * -0.3,
-        fishPara[i][1] + fishPara[i][4] * -0.3,
-        fishPara[i][1] + fishPara[i][4] * -0.3,
-        fishPara[i][1] + fishPara[i][4] * -0.3
+        fishPara[i][1] + fishPara[i][4] * (float)0.3,
+        fishPara[i][1] + fishPara[i][4] * (float)0.3,
+        fishPara[i][1] + fishPara[i][4] * (float)0.3,
+        fishPara[i][1] + fishPara[i][4] * (float)0.3,
+        fishPara[i][1] + fishPara[i][4] * (float)-0.3,
+        fishPara[i][1] + fishPara[i][4] * (float)-0.3,
+        fishPara[i][1] + fishPara[i][4] * (float)-0.3,
+        fishPara[i][1] + fishPara[i][4] * (float)-0.3
     };
 
     fishBlock[i][2] = 
     {
-        fishPara[i][2] + fishPara[i][4] * (0.7 * cos( fishPara[i][3] * PI / 180.0 ) - 0.125 * sin( fishPara[i][3] * PI / 180.0)),
-        fishPara[i][2] + fishPara[i][4] * (0.7 * cos( fishPara[i][3] * PI / 180.0 ) + 0.125 * sin( fishPara[i][3] * PI / 180.0)),
-        fishPara[i][2] + fishPara[i][4] * (-0.5 * cos( fishPara[i][3] * PI / 180.0 ) - 0.125 * sin( fishPara[i][3] * PI / 180.0)),
-        fishPara[i][2] + fishPara[i][4] * (-0.5 * cos( fishPara[i][3] * PI / 180.0 ) + 0.125 * sin( fishPara[i][3] * PI / 180.0)),
-        fishPara[i][2] + fishPara[i][4] * (0.7 * cos( fishPara[i][3] * PI / 180.0 ) - 0.125 * sin( fishPara[i][3] * PI / 180.0)),
-        fishPara[i][2] + fishPara[i][4] * (0.7 * cos( fishPara[i][3] * PI / 180.0 ) + 0.125 * sin( fishPara[i][3] * PI / 180.0)),
-        fishPara[i][2] + fishPara[i][4] * (-0.5 * cos( fishPara[i][3] * PI / 180.0 ) - 0.125 * sin( fishPara[i][3] * PI / 180.0)),
-        fishPara[i][2] + fishPara[i][4] * (-0.5 * cos( fishPara[i][3] * PI / 180.0 ) + 0.125 * sin( fishPara[i][3] * PI / 180.0))
+        fishPara[i][2] + fishPara[i][4] * ((float)0.7  * cosf( fishPara[i][3] * PI / 180.0 ) - (float)0.125 * sinf( fishPara[i][3] * PI / 180.0)),
+        fishPara[i][2] + fishPara[i][4] * ((float)0.7  * cosf( fishPara[i][3] * PI / 180.0 ) + (float)0.125 * sinf( fishPara[i][3] * PI / 180.0)),
+        fishPara[i][2] + fishPara[i][4] * ((float)-0.5 * cosf( fishPara[i][3] * PI / 180.0 ) - (float)0.125 * sinf( fishPara[i][3] * PI / 180.0)),
+        fishPara[i][2] + fishPara[i][4] * ((float)-0.5 * cosf( fishPara[i][3] * PI / 180.0 ) + (float)0.125 * sinf( fishPara[i][3] * PI / 180.0)),
+        fishPara[i][2] + fishPara[i][4] * ((float)0.7  * cosf( fishPara[i][3] * PI / 180.0 ) - (float)0.125 * sinf( fishPara[i][3] * PI / 180.0)),
+        fishPara[i][2] + fishPara[i][4] * ((float)0.7  * cosf( fishPara[i][3] * PI / 180.0 ) + (float)0.125 * sinf( fishPara[i][3] * PI / 180.0)),
+        fishPara[i][2] + fishPara[i][4] * ((float)-0.5 * cosf( fishPara[i][3] * PI / 180.0 ) - (float)0.125 * sinf( fishPara[i][3] * PI / 180.0)),
+        fishPara[i][2] + fishPara[i][4] * ((float)-0.5 * cosf( fishPara[i][3] * PI / 180.0 ) + (float)0.125 * sinf( fishPara[i][3] * PI / 180.0))
     };
 }
 
@@ -175,11 +184,11 @@ void initFishes()
 
     for( int i = 0; i < fishPara.size(); i++ )
     {
-        vector<double> pos = randomPos();
-        vector<double> color = randomColor( false );
+        vector<float> pos = randomPos();
+        vector<float> color = randomColor( false );
 
         fishPara[i] = { pos[0], pos[1], pos[2], 
-                        (rand()/ (RAND_MAX + 1.0) * 360), (rand()/ (RAND_MAX + 1.0)) * 10.0 + 5.0,
+                        (rand()/ (RAND_MAX + (float)1.0) * 360), (rand()/ (RAND_MAX + (float)1.0)) * (float)10.0 + (float)5.0,
                         color[0], color[1], color[2]};
 
         initFishBlock( i );
@@ -230,7 +239,7 @@ bool fishCollision()
     {
         if( myROV->graspingFish == i ) continue;
 
-        vector<double> pos = { fishPara[i][0], fishPara[i][1], fishPara[i][2] };
+        vector<float> pos = { fishPara[i][0], fishPara[i][1], fishPara[i][2] };
         myROV -> collisionDetect( fishBlock[i], pos );
 
         if( myROV->isCollision ) col = true;
@@ -258,46 +267,46 @@ void initStones()
 {
     for( int i = 0; i < stonePara.size(); i++ )
     {
-        vector<double> pos = randomPos();
+        vector<float> pos = randomPos();
 
         stonePara[i] = { pos[0], pos[2], 
-                        (rand()/ (RAND_MAX + 1.0)) * 20 + 5,(rand()/ (RAND_MAX + 1.0)) * 20 + 5,(rand()/ (RAND_MAX + 1.0)) * 20 + 5,
-                        (rand()/ (RAND_MAX + 1.0) * 0.1 + 0.1)};
+                        (rand()/ (RAND_MAX + (float)1.0)) * 20 + 5,(rand()/ (RAND_MAX + (float)1.0)) * 20 + 5,(rand()/ (RAND_MAX + (float)1.0)) * 20 + 5,
+                        (rand()/ (RAND_MAX + (float)1.0) * (float)0.1 + (float)0.1)};
 
         stoneBlock[i][0] =
         {
-            stonePara[i][0] + stonePara[i][2] * 3.23 / 2.0,
-            stonePara[i][0] - stonePara[i][2] * 3.23 / 2.0,
-            stonePara[i][0] + stonePara[i][2] * 3.23 / 2.0,
-            stonePara[i][0] - stonePara[i][2] * 3.23 / 2.0,
-            stonePara[i][0] + stonePara[i][2] * 3.23 / 2.0,
-            stonePara[i][0] - stonePara[i][2] * 3.23 / 2.0,
-            stonePara[i][0] + stonePara[i][2] * 3.23 / 2.0,
-            stonePara[i][0] - stonePara[i][2] * 3.23 / 2.0
+            stonePara[i][0] + stonePara[i][2] * (float)3.23 / (float)2.0,
+            stonePara[i][0] - stonePara[i][2] * (float)3.23 / (float)2.0,
+            stonePara[i][0] + stonePara[i][2] * (float)3.23 / (float)2.0,
+            stonePara[i][0] - stonePara[i][2] * (float)3.23 / (float)2.0,
+            stonePara[i][0] + stonePara[i][2] * (float)3.23 / (float)2.0,
+            stonePara[i][0] - stonePara[i][2] * (float)3.23 / (float)2.0,
+            stonePara[i][0] + stonePara[i][2] * (float)3.23 / (float)2.0,
+            stonePara[i][0] - stonePara[i][2] * (float)3.23 / (float)2.0
         };
 
         stoneBlock[i][1] =
         {
-            stonePara[i][3] * 3.23,
-            stonePara[i][3] * 3.23,
-            stonePara[i][3] * 3.23,
-            stonePara[i][3] * 3.23,
-            0.0,
-            0.0,
-            0.0,
-            0.0
+            stonePara[i][3] * (float)3.23,
+            stonePara[i][3] * (float)3.23,
+            stonePara[i][3] * (float)3.23,
+            stonePara[i][3] * (float)3.23,
+            (float)0.0,
+            (float)0.0,
+            (float)0.0,
+            (float)0.0
         };
 
         stoneBlock[i][2] =
         {
-            stonePara[i][1] + stonePara[i][4] * 3.23 / 2.0,
-            stonePara[i][1] + stonePara[i][4] * 3.23 / 2.0,
-            stonePara[i][1] - stonePara[i][4] * 3.23 / 2.0,
-            stonePara[i][1] - stonePara[i][4] * 3.23 / 2.0,
-            stonePara[i][1] + stonePara[i][4] * 3.23 / 2.0,
-            stonePara[i][1] + stonePara[i][4] * 3.23 / 2.0,
-            stonePara[i][1] - stonePara[i][4] * 3.23 / 2.0,
-            stonePara[i][1] - stonePara[i][4] * 3.23 / 2.0
+            stonePara[i][1] + stonePara[i][4] * (float)3.23 / (float)2.0,
+            stonePara[i][1] + stonePara[i][4] * (float)3.23 / (float)2.0,
+            stonePara[i][1] - stonePara[i][4] * (float)3.23 / (float)2.0,
+            stonePara[i][1] - stonePara[i][4] * (float)3.23 / (float)2.0,
+            stonePara[i][1] + stonePara[i][4] * (float)3.23 / (float)2.0,
+            stonePara[i][1] + stonePara[i][4] * (float)3.23 / (float)2.0,
+            stonePara[i][1] - stonePara[i][4] * (float)3.23 / (float)2.0,
+            stonePara[i][1] - stonePara[i][4] * (float)3.23 / (float)2.0
         };
     }
 }
@@ -333,7 +342,7 @@ bool stoneCollision()
 
     for( int i = 0; i < stonePara.size(); i++ )
     {
-        vector<double> pos = { stonePara[i][0], stonePara[i][3] * 3.23 / 2.0, stonePara[i][1] };
+        vector<float> pos = { stonePara[i][0], stonePara[i][3] * (float)3.23 / (float)2.0, stonePara[i][1] };
         myROV -> collisionDetect( stoneBlock[i], pos );
 
         if( myROV->isCollision ) col = true;

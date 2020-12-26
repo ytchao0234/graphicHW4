@@ -4,10 +4,10 @@ class Info
         vector<string> infos;
         int width;
         int height;
-        double initX;
-        double initY;
+        float initX;
+        float initY;
         int lines;
-        double step;
+        float step;
         bool toDrawMap;
 
     Info(): width( windowWidth / 2 ),
@@ -37,10 +37,11 @@ class Info
 
 void Info::showInfo()
 {
+    glDisable(GL_LIGHTING);
     glMatrixMode( GL_PROJECTION );
     glPushMatrix();
         glLoadIdentity();
-        gluOrtho2D( 0.0, (double)width, 0.0, (double)height );
+        gluOrtho2D( 0.0, (float)width, 0.0, (float)height );
 
         glMatrixMode( GL_MODELVIEW );
         glPushMatrix();
@@ -61,6 +62,7 @@ void Info::showInfo()
 
     glMatrixMode( GL_PROJECTION );
     glPopMatrix();
+    glEnable(GL_LIGHTING);
 }
 
 void Info::drawBackground()
@@ -167,11 +169,11 @@ void Info::drawMap()
     glEnd();
 
     // ROV
-    double x = (myROV->pos[0] - myROV->limitPos[0].first) / ( myROV->limitPos[0].second - myROV->limitPos[0].first );
-    double z = (myROV->pos[2] - myROV->limitPos[2].first) / ( myROV->limitPos[2].second - myROV->limitPos[2].first );
+    float x = (myROV->pos[0] - myROV->limitPos[0].first) / ( myROV->limitPos[0].second - myROV->limitPos[0].first );
+    float z = (myROV->pos[2] - myROV->limitPos[2].first) / ( myROV->limitPos[2].second - myROV->limitPos[2].first );
 
-    double facingx = (myROV->pos[0] + myROV->facing[0] * 50.0 - myROV->limitPos[0].first) / ( myROV->limitPos[0].second - myROV->limitPos[0].first );
-    double facingz = (myROV->pos[2] + myROV->facing[2] * 50.0 - myROV->limitPos[2].first) / ( myROV->limitPos[2].second - myROV->limitPos[2].first );
+    float facingx = (myROV->pos[0] + myROV->facing[0] * 50.0 - myROV->limitPos[0].first) / ( myROV->limitPos[0].second - myROV->limitPos[0].first );
+    float facingz = (myROV->pos[2] + myROV->facing[2] * 50.0 - myROV->limitPos[2].first) / ( myROV->limitPos[2].second - myROV->limitPos[2].first );
 
     glColor3f( 1.0, 0.0, 0.0 );
     glPointSize( 5.0 );
@@ -191,8 +193,8 @@ void Info::drawMap()
 
     for( auto fish : fishPara )
     {
-        double x = (fish[0] - myROV->limitPos[0].first) / ( myROV->limitPos[0].second - myROV->limitPos[0].first );
-        double z = (fish[2] - myROV->limitPos[2].first) / ( myROV->limitPos[2].second - myROV->limitPos[2].first );
+        float x = (fish[0] - myROV->limitPos[0].first) / ( myROV->limitPos[0].second - myROV->limitPos[0].first );
+        float z = (fish[2] - myROV->limitPos[2].first) / ( myROV->limitPos[2].second - myROV->limitPos[2].first );
 
         glBegin( GL_POINTS );
             glVertex2d( (width - lines * step / 2.0) - (width - lines * step) * x, (height - lines * step) * z );
@@ -205,8 +207,8 @@ void Info::drawMap()
 
     for( auto stone : stonePara )
     {
-        double x = (stone[0] - myROV->limitPos[0].first) / ( myROV->limitPos[0].second - myROV->limitPos[0].first );
-        double z = (stone[1] - myROV->limitPos[2].first) / ( myROV->limitPos[2].second - myROV->limitPos[2].first );
+        float x = (stone[0] - myROV->limitPos[0].first) / ( myROV->limitPos[0].second - myROV->limitPos[0].first );
+        float z = (stone[1] - myROV->limitPos[2].first) / ( myROV->limitPos[2].second - myROV->limitPos[2].first );
 
         glBegin( GL_POINTS );
             glVertex2d( (width - lines * step / 2.0) - (width - lines * step) * x, (height - lines * step) * z );

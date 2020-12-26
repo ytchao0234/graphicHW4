@@ -5,6 +5,7 @@
 
 class ROV;
 class Info;
+class SunLight;
 
 void display();
 void reshape( int, int );
@@ -27,8 +28,8 @@ void drawStone();
 
 void drawScene();
 void drawWCS();
-vector<double> randomColor( bool = true );
-vector<double> randomPos();
+vector<float> randomColor( bool = true );
+vector<float> randomPos();
 void initFloor();
 void drawFloor();
 void initFishes();
@@ -40,10 +41,14 @@ void initStones();
 void drawStones();
 bool stoneCollision();
 
+void setLight();
+
 ROV *myROV = NULL;
 Info *myInfo1 = NULL, *myInfo2 = NULL;
+SunLight *mySun = NULL;
 vector<unsigned char> pressingKey;
 
+#include "lights.hpp"
 #include "models.hpp"
 #include "ROV.hpp"
 #include "background.hpp"

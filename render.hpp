@@ -13,6 +13,7 @@ void display()
             changeLookAt( OrthoX );
             makeProjection( OrthoX );
             glViewport( 0, 0, windowWidth, windowHeight );
+            setLight();
             drawScene();
 
             glViewport( windowWidth - myInfo2->width, windowHeight - myInfo2->height, myInfo2->width, myInfo2->height );
@@ -23,6 +24,7 @@ void display()
             changeLookAt( OrthoY );
             makeProjection( OrthoY );
             glViewport( 0, 0, windowWidth, windowHeight );
+            setLight();
             drawScene();
 
             glViewport( windowWidth - myInfo2->width, windowHeight - myInfo2->height, myInfo2->width, myInfo2->height );
@@ -33,6 +35,7 @@ void display()
             changeLookAt( OrthoZ );
             makeProjection( OrthoZ );
             glViewport( 0, 0, windowWidth, windowHeight );
+            setLight();
             drawScene();
 
             glViewport( windowWidth - myInfo2->width, windowHeight - myInfo2->height, myInfo2->width, myInfo2->height );
@@ -43,6 +46,7 @@ void display()
             changeLookAt( FIRST_VIEW );
             makeProjection( FIRST_VIEW );
             glViewport( 0, 0, windowWidth, windowHeight );
+            setLight();
             drawScene();
 
             glViewport( windowWidth - myInfo2->width, windowHeight - myInfo2->height, myInfo2->width, myInfo2->height );
@@ -53,6 +57,7 @@ void display()
             changeLookAt( THIRD_VIEW );
             makeProjection( THIRD_VIEW );
             glViewport( 0, 0, windowWidth, windowHeight );
+            setLight();
             drawScene();
 
             glViewport( windowWidth - myInfo2->width, windowHeight - myInfo2->height, myInfo2->width, myInfo2->height );
@@ -63,6 +68,7 @@ void display()
             changeLookAt( GOD_VIEW );
             makeProjection( GOD_VIEW );
             glViewport( 0, 0, windowWidth, windowHeight );
+            setLight();
             drawScene();
 
             glViewport( windowWidth - myInfo2->width, windowHeight - myInfo2->height, myInfo2->width, myInfo2->height );
@@ -73,21 +79,25 @@ void display()
             changeLookAt( OrthoX );
             makeProjection( OrthoX );
             glViewport( 0, windowHeight / 2, windowWidth / 2, windowHeight / 2 );
+            setLight();
             drawScene();
 
             changeLookAt( OrthoY );
             makeProjection( OrthoY );
             glViewport( windowWidth / 2, windowHeight / 2, windowWidth / 2, windowHeight / 2 );
+            setLight();
             drawScene();
 
             changeLookAt( OrthoZ );
             makeProjection( OrthoZ );
             glViewport( 0, 0, windowWidth / 2, windowHeight / 2 );
+            setLight();
             drawScene();
 
             changeLookAt( FIRST_VIEW );
             makeProjection( FIRST_VIEW );
             glViewport( windowWidth / 2, 0, windowWidth / 2, windowHeight / 2 );
+            setLight();
             drawScene();
             break;
 
@@ -95,16 +105,19 @@ void display()
             changeLookAt( THIRD_VIEW );
             makeProjection( THIRD_VIEW );
             glViewport( 0, windowHeight / 2, windowWidth / 2, windowHeight / 2 );
+            setLight();
             drawScene();
 
             changeLookAt( FIRST_VIEW );
             makeProjection( FIRST_VIEW );
             glViewport( windowWidth / 2, windowHeight / 2, windowWidth / 2, windowHeight / 2 );
+            setLight();
             drawScene();
 
             changeLookAt( GOD_VIEW );
             makeProjection( GOD_VIEW );
             glViewport( 0, 0, windowWidth / 2, windowHeight / 2 );
+            setLight();
             drawScene();
 
             glViewport( windowWidth / 2, 0, windowWidth / 2, windowHeight / 2);
@@ -129,7 +142,9 @@ void initWindow()
 
     glClearColor( 0.05, 0.05, 0.3, 1.0 ); 
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+    glShadeModel( GL_SMOOTH );
     glEnable( GL_DEPTH_TEST );
+    glEnable( GL_NORMALIZE );
 
     if( !sphere )
     {
@@ -165,6 +180,19 @@ void initWindow()
     {
         myInfo2 = new Info( (int)(INIT_W * 0.4), (int)(INIT_H * 0.2) );
     }
+
+    if( !mySun )
+    {
+        mySun = new SunLight();
+    }
+
+    glEnable( GL_LIGHTING );
+    glEnable( GL_LIGHT0 );
+
+    glLightModeli( GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE );
+    glLightModelfv( GL_LIGHT_MODEL_AMBIENT, global_ambient );
+    glCullFace( GL_BACK );
+    glEnable( GL_CULL_FACE );
 
     initFloor();
     initFishes();

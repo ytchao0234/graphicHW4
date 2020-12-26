@@ -1,22 +1,26 @@
 class ROV
 {
     public:
-        vector<double> pos;
-        vector<pair<double, double>> limitPos;
-        vector<double> rotation;
-        vector<double> facing;
-        vector<double> acceleration;
-        vector<double> speed;
+        vector<float> pos;
+        vector<pair<float, float>> limitPos;
+        vector<float> rotation;
+        vector<float> facing;
+        vector<float> acceleration;
+        vector<float> speed;
         vector<bool> isMoving;
-        double maxSpeed, bladeAngle, armLength;
-        pair<double, double> limitArmLength;
-        vector<vector<double>> blockPoints;
-        vector<double> handPos;
-        vector<vector<double>> handBlockPoints;
-        vector<double> collisionVector;
+        float maxSpeed, bladeAngle, armLength;
+        pair<float, float> limitArmLength;
+        vector<vector<float>> blockPoints;
+        vector<float> handPos;
+        vector<vector<float>> handBlockPoints;
+        vector<float> collisionVector;
         bool grasping, toDrawBlock, isCollision;
         int graspingFish;
-        vector<vector<double>> colors;
+        vector<vector<float>> colors;
+        vector<vector<float>> ambient;
+        vector<vector<float>> diffuse;
+        vector<vector<float>> specular;
+        vector<float> shininess;
 
         ROV(): pos( { 20.0, 25.0, 20.0 } ),
                limitPos( {{ -900.0, 900.0 }, 
@@ -31,9 +35,9 @@ class ROV
                bladeAngle( 0.0 ),
                armLength( 1.0 ),
                limitArmLength( { 1.0, 200.0 } ),
-               blockPoints(3, vector<double>(8)),
+               blockPoints(3, vector<float>(8)),
                handPos(3),
-               handBlockPoints(3, vector<double>(8)),
+               handBlockPoints(3, vector<float>(8)),
                grasping( false ),
                graspingFish( -1 ),
                toDrawBlock( false ),
@@ -47,6 +51,53 @@ class ROV
                 { 0.5, 0.5, 0.5 },
                 { 0.6, 0.6, 0.6 },
                 { 0.1, 0.5, 0.7 }
+            };
+
+            ambient = 
+            {
+                { 0.4, 0.4, 0.4, 1.0 },
+                { 0.6, 0.6, 0.6, 1.0 },
+                { 0.0, 0.0, 0.0, 1.0 },
+                { 1.0, 1.0, 1.0, 1.0 },
+                { 0.5, 0.5, 0.5, 1.0 },
+                { 0.5, 0.5, 0.5, 1.0 },
+                { 0.3, 0.3, 0.3, 1.0 },
+                { 0.3, 0.7, 0.9, 1.0 },
+                { 0.6, 0.6, 0.6, 1.0 },
+                { 0.3, 0.7, 0.9, 1.0 }
+            };
+
+            diffuse = 
+            {
+               { 0.5, 0.5, 0.5, 1.0 },
+               { 0.7, 0.7, 0.7, 1.0 },
+               { 0.1, 0.1, 0.1, 1.0 },
+               { 1.0, 1.0, 1.0, 1.0 },
+               { 0.5, 0.5, 0.5, 1.0 },
+               { 0.5, 0.5, 0.5, 1.0 },
+               { 0.3, 0.3, 0.3, 1.0 },
+               { 0.3, 0.7, 0.9, 1.0 },
+               { 0.7, 0.7, 0.7, 1.0 },
+               { 0.3, 0.7, 0.9, 1.0 }
+            };
+
+            specular = 
+            {
+                { 0.3, 0.3, 0.3, 1.0 },
+                { 0.3, 0.3, 0.3, 1.0 },
+                { 0.3, 0.3, 0.3, 1.0 },
+                { 0.3, 0.3, 0.3, 1.0 },
+                { 0.3, 0.3, 0.3, 1.0 },
+                { 0.3, 0.3, 0.3, 1.0 },
+                { 0.3, 0.3, 0.3, 1.0 },
+                { 0.3, 0.3, 0.3, 1.0 },
+                { 0.3, 0.3, 0.3, 1.0 },
+                { 0.3, 0.3, 0.3, 1.0 }
+            };
+
+            shininess =
+            {
+                8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0
             };
         }
 
@@ -73,22 +124,22 @@ class ROV
         void turnLeftRight( bool );
         void setFacing();
 
-        bool collision( vector<vector<double>>, vector<vector<double>> );
-        void collisionDetect( vector<vector<double>>, vector<double> );
+        bool collision( vector<vector<float>>, vector<vector<float>> );
+        void collisionDetect( vector<vector<float>>, vector<float> );
 };
 
 void ROV::setBlockPoint()
 {
     blockPoints[0] = 
     {
-        pos[0] + 22 * facing[0] + 24.071 * facing[2],
-        pos[0] + 22 * facing[0] - 24.071 * facing[2],
-        pos[0] - 22 * facing[0] + 24.071 * facing[2],
-        pos[0] - 22 * facing[0] - 24.071 * facing[2],
-        pos[0] + 22 * facing[0] + 24.071 * facing[2],
-        pos[0] + 22 * facing[0] - 24.071 * facing[2],
-        pos[0] - 22 * facing[0] + 24.071 * facing[2],
-        pos[0] - 22 * facing[0] - 24.071 * facing[2],
+        pos[0] + 22 * facing[0] + (float)24.071 * facing[2],
+        pos[0] + 22 * facing[0] - (float)24.071 * facing[2],
+        pos[0] - 22 * facing[0] + (float)24.071 * facing[2],
+        pos[0] - 22 * facing[0] - (float)24.071 * facing[2],
+        pos[0] + 22 * facing[0] + (float)24.071 * facing[2],
+        pos[0] + 22 * facing[0] - (float)24.071 * facing[2],
+        pos[0] - 22 * facing[0] + (float)24.071 * facing[2],
+        pos[0] - 22 * facing[0] - (float)24.071 * facing[2],
     };
 
     blockPoints[1] = 
@@ -105,54 +156,54 @@ void ROV::setBlockPoint()
 
     blockPoints[2] = 
     {
-        pos[2] + 22 * facing[2] - 24.071 * facing[0],
-        pos[2] + 22 * facing[2] + 24.071 * facing[0],
-        pos[2] - 22 * facing[2] - 24.071 * facing[0],
-        pos[2] - 22 * facing[2] + 24.071 * facing[0],
-        pos[2] + 22 * facing[2] - 24.071 * facing[0],
-        pos[2] + 22 * facing[2] + 24.071 * facing[0],
-        pos[2] - 22 * facing[2] - 24.071 * facing[0],
-        pos[2] - 22 * facing[2] + 24.071 * facing[0]
+        pos[2] + 22 * facing[2] - (float)24.071 * facing[0],
+        pos[2] + 22 * facing[2] + (float)24.071 * facing[0],
+        pos[2] - 22 * facing[2] - (float)24.071 * facing[0],
+        pos[2] - 22 * facing[2] + (float)24.071 * facing[0],
+        pos[2] + 22 * facing[2] - (float)24.071 * facing[0],
+        pos[2] + 22 * facing[2] + (float)24.071 * facing[0],
+        pos[2] - 22 * facing[2] - (float)24.071 * facing[0],
+        pos[2] - 22 * facing[2] + (float)24.071 * facing[0]
     };
 
-    handPos = { pos[0] + (23 + armLength) * facing[0] - 5.0 * facing[2],
-                pos[1] - 5.0,
-                pos[2] + (23 + armLength) * facing[2] + 5.0 * facing[0] };
+    handPos = { pos[0] + (23 + armLength) * facing[0] - (float)5.0 * facing[2],
+                pos[1] - (float)5.0,
+                pos[2] + (23 + armLength) * facing[2] + (float)5.0 * facing[0] };
 
     handBlockPoints[0] = 
     {
-        handPos[0] + 2.5 * facing[0] + 2.5 * facing[2],
-        handPos[0] + 2.5 * facing[0] - 2.5 * facing[2],
-        handPos[0] - 2.5 * facing[0] + 2.5 * facing[2],
-        handPos[0] - 2.5 * facing[0] - 2.5 * facing[2],
-        handPos[0] + 2.5 * facing[0] + 2.5 * facing[2],
-        handPos[0] + 2.5 * facing[0] - 2.5 * facing[2],
-        handPos[0] - 2.5 * facing[0] + 2.5 * facing[2],
-        handPos[0] - 2.5 * facing[0] - 2.5 * facing[2],
+        handPos[0] + (float)2.5 * facing[0] + (float)2.5 * facing[2],
+        handPos[0] + (float)2.5 * facing[0] - (float)2.5 * facing[2],
+        handPos[0] - (float)2.5 * facing[0] + (float)2.5 * facing[2],
+        handPos[0] - (float)2.5 * facing[0] - (float)2.5 * facing[2],
+        handPos[0] + (float)2.5 * facing[0] + (float)2.5 * facing[2],
+        handPos[0] + (float)2.5 * facing[0] - (float)2.5 * facing[2],
+        handPos[0] - (float)2.5 * facing[0] + (float)2.5 * facing[2],
+        handPos[0] - (float)2.5 * facing[0] - (float)2.5 * facing[2],
     };
 
     handBlockPoints[1] = 
     {
-        handPos[1] + 2.5,
-        handPos[1] + 2.5,
-        handPos[1] + 2.5,
-        handPos[1] + 2.5,
-        handPos[1] - 2.5,
-        handPos[1] - 2.5,
-        handPos[1] - 2.5,
-        handPos[1] - 2.5
+        handPos[1] + (float)2.5,
+        handPos[1] + (float)2.5,
+        handPos[1] + (float)2.5,
+        handPos[1] + (float)2.5,
+        handPos[1] - (float)2.5,
+        handPos[1] - (float)2.5,
+        handPos[1] - (float)2.5,
+        handPos[1] - (float)2.5
     };
 
     handBlockPoints[2] = 
     {
-        handPos[2] + 2.5 * facing[2] - 2.5 * facing[0],
-        handPos[2] + 2.5 * facing[2] + 2.5 * facing[0],
-        handPos[2] - 2.5 * facing[2] - 2.5 * facing[0],
-        handPos[2] - 2.5 * facing[2] + 2.5 * facing[0],
-        handPos[2] + 2.5 * facing[2] - 2.5 * facing[0],
-        handPos[2] + 2.5 * facing[2] + 2.5 * facing[0],
-        handPos[2] - 2.5 * facing[2] - 2.5 * facing[0],
-        handPos[2] - 2.5 * facing[2] + 2.5 * facing[0]
+        handPos[2] + (float)2.5 * facing[2] - (float)2.5 * facing[0],
+        handPos[2] + (float)2.5 * facing[2] + (float)2.5 * facing[0],
+        handPos[2] - (float)2.5 * facing[2] - (float)2.5 * facing[0],
+        handPos[2] - (float)2.5 * facing[2] + (float)2.5 * facing[0],
+        handPos[2] + (float)2.5 * facing[2] - (float)2.5 * facing[0],
+        handPos[2] + (float)2.5 * facing[2] + (float)2.5 * facing[0],
+        handPos[2] - (float)2.5 * facing[2] - (float)2.5 * facing[0],
+        handPos[2] - (float)2.5 * facing[2] + (float)2.5 * facing[0]
     };
 }
 
@@ -202,7 +253,11 @@ void ROV::drawROV()
 void ROV::drawMainBody()
 {
     glPushMatrix();
-        glColor3f( colors[2][0], colors[2][1], colors[2][2] );
+        glMaterialfv( GL_FRONT, GL_AMBIENT, &(ambient[0][0]) );
+        glMaterialfv( GL_FRONT, GL_DIFFUSE, &(diffuse[0][0]) );
+        glMaterialfv( GL_FRONT, GL_SPECULAR, &(specular[0][0]) );
+        glMaterialf( GL_FRONT, GL_SHININESS, shininess[0] );
+        
         glScalef( 20.0, 20.0, 40.0 );
         glutSolidCube( 1.0 );
     glPopMatrix();
@@ -214,19 +269,31 @@ void ROV::drawCamera()
         glTranslatef( 0.0, 10.0, 20.0 );
 
         glPushMatrix();
-            glColor3f( colors[4][0], colors[4][1], colors[4][2] );
+            glMaterialfv( GL_FRONT, GL_AMBIENT, &(ambient[1][0]) );
+            glMaterialfv( GL_FRONT, GL_DIFFUSE, &(diffuse[1][0]) );
+            glMaterialfv( GL_FRONT, GL_SPECULAR, &(specular[1][0]) );
+            glMaterialf( GL_FRONT, GL_SHININESS, shininess[1] );
+            
             glScalef( 10.0, 5.0, 5.0);
             drawTrapezoidalCube();
         glPopMatrix();
 
         glPushMatrix();
-            glColor3f( colors[0][0], colors[0][1], colors[0][2] );
+            glMaterialfv( GL_FRONT, GL_AMBIENT, &(ambient[2][0]) );
+            glMaterialfv( GL_FRONT, GL_DIFFUSE, &(diffuse[2][0]) );
+            glMaterialfv( GL_FRONT, GL_SPECULAR, &(specular[2][0]) );
+            glMaterialf( GL_FRONT, GL_SHININESS, shininess[2] );
+
             glTranslatef( 0.0, 2.5, 0.25 );
             gluDisk( circleObj, 0.0, 1.5, 12, 1 );
         glPopMatrix();
 
         glPushMatrix();
-            glColor3f( colors[1][0], colors[1][1], colors[1][2] );
+            glMaterialfv( GL_FRONT, GL_AMBIENT, &(ambient[3][0]) );
+            glMaterialfv( GL_FRONT, GL_DIFFUSE, &(diffuse[3][0]) );
+            glMaterialfv( GL_FRONT, GL_SPECULAR, &(specular[3][0]) );
+            glMaterialf( GL_FRONT, GL_SHININESS, shininess[3] );
+
             glTranslatef( 0.0, 2.5, 0.251 );
             gluDisk( circleObj, 0.0, 0.25, 12, 1 );
         glPopMatrix();
@@ -244,7 +311,11 @@ void ROV::drawPropeller( bool left )
             glRotatef( 90.0, 0.0, 1.0, 0.0 );
             glRotatef( 45.0, 1.0, 0.0, 0.0 );
 
-            glColor3f( colors[3][0], colors[3][1], colors[3][2] );
+            glMaterialfv( GL_FRONT, GL_AMBIENT, &(ambient[4][0]) );
+            glMaterialfv( GL_FRONT, GL_DIFFUSE, &(diffuse[4][0]) );
+            glMaterialfv( GL_FRONT, GL_SPECULAR, &(specular[4][0]) );
+            glMaterialf( GL_FRONT, GL_SHININESS, shininess[4] );
+
             gluCylinder( cylinder, 1, 1, 10, 12, 3 );
         }
         else
@@ -253,7 +324,11 @@ void ROV::drawPropeller( bool left )
             glRotatef( -90.0, 0.0, 1.0, 0.0 );
             glRotatef( 45.0, 1.0, 0.0, 0.0 );
             
-            glColor3f( colors[3][0], colors[3][1], colors[3][2] );
+            glMaterialfv( GL_FRONT, GL_AMBIENT, &(ambient[5][0]) );
+            glMaterialfv( GL_FRONT, GL_DIFFUSE, &(diffuse[5][0]) );
+            glMaterialfv( GL_FRONT, GL_SPECULAR, &(specular[5][0]) );
+            glMaterialf( GL_FRONT, GL_SHININESS, shininess[5] );
+
             gluCylinder( cylinder, 1, 1, 10, 12, 3 );
         }
 
@@ -275,7 +350,10 @@ void ROV::drawPropeller( bool left )
 
                     glPushMatrix();
                         glTranslatef( 0.0, 0.0, 3.0 );
-                        glColor3f( colors[2][0], colors[2][1], colors[2][2] );
+                        glMaterialfv( GL_FRONT, GL_AMBIENT, &(ambient[6][0]) );
+                        glMaterialfv( GL_FRONT, GL_DIFFUSE, &(diffuse[6][0]) );
+                        glMaterialfv( GL_FRONT, GL_SPECULAR, &(specular[6][0]) );
+                        glMaterialf( GL_FRONT, GL_SHININESS, shininess[6] );
                         gluSphere( sphere, 1, 12, 12 );
 
                         if( !left )
@@ -306,7 +384,10 @@ void ROV::drawBlades()
         glRotatef( bladeAngle, 1.0, 0.0, 0.0 );
 
         glScalef( 1.0, 5.0, 5.0 );
-        glColor3f( colors[5][0], colors[5][1], colors[5][2] );
+        glMaterialfv( GL_FRONT, GL_AMBIENT, &(ambient[7][0]) );
+        glMaterialfv( GL_FRONT, GL_DIFFUSE, &(diffuse[7][0]) );
+        glMaterialfv( GL_FRONT, GL_SPECULAR, &(specular[7][0]) );
+        glMaterialf( GL_FRONT, GL_SHININESS, shininess[7] );
         drawPyramid( false );
 
         glRotatef( 120.0, 1.0, 0.0, 0.0 );
@@ -319,7 +400,7 @@ void ROV::drawBlades()
 
 void ROV::drawArm()
 {
-    double angle;
+    float angle;
 
     if( grasping )
         angle = -60.0;
@@ -330,14 +411,20 @@ void ROV::drawArm()
 
     glPushMatrix();
         glTranslatef( -5.0, -5.0, 20.0 );
-        glColor3f( colors[4][0], colors[4][1], colors[4][2] );
+        glMaterialfv( GL_FRONT, GL_AMBIENT, &(ambient[8][0]) );
+        glMaterialfv( GL_FRONT, GL_DIFFUSE, &(diffuse[8][0]) );
+        glMaterialfv( GL_FRONT, GL_SPECULAR, &(specular[8][0]) );
+        glMaterialf( GL_FRONT, GL_SHININESS, shininess[8] );
         gluCylinder( cylinder, 1, 1, armLength, 12, 3 );
 
         glPushMatrix();
             glTranslatef( 0.0, 0.0, armLength );
             gluSphere( sphere, 1, 12, 12 );
 
-            glColor3f( colors[5][0], colors[5][1], colors[5][2] );
+            glMaterialfv( GL_FRONT, GL_AMBIENT, &(ambient[9][0]) );
+            glMaterialfv( GL_FRONT, GL_DIFFUSE, &(diffuse[9][0]) );
+            glMaterialfv( GL_FRONT, GL_SPECULAR, &(specular[9][0]) );
+            glMaterialf( GL_FRONT, GL_SHININESS, shininess[9] );
             glPushMatrix();
                 glRotatef( 90.0, 0.0, 1.0, 0.0 );
 
@@ -394,29 +481,29 @@ void ROV::drawArm()
 
 void ROV::drawViewVolume()
 {
-    double near = perspectiveNear * tan( perspectiveEye / 2.0 * PI / 180.0 );
-    double far = perspectiveFar * tan( perspectiveEye / 2.0 * PI / 180.0 );
-    double wh = (double) windowWidth / windowHeight;
+    float near = perspectiveNear * tanf( perspectiveEye / 2.0 * PI / 180.0 );
+    float far = perspectiveFar * tanf( perspectiveEye / 2.0 * PI / 180.0 );
+    float wh = (float) windowWidth / windowHeight;
 
-    double camera[3] = { pos[0] + facing[0] * 20.0, 
-                         pos[1] + facing[1] * 20.0,
-                         pos[2] + facing[2] * 20.0 };
+    float camera[3] = { pos[0] + facing[0] * (float)20.0, 
+                         pos[1] + facing[1] * (float)20.0,
+                         pos[2] + facing[2] * (float)20.0 };
     
-    double xln = camera[0] + facing[0] * perspectiveNear + facing[2] * near * wh,
+    float xln = camera[0] + facing[0] * perspectiveNear + facing[2] * near * wh,
            xrn = camera[0] + facing[0] * perspectiveNear - facing[2] * near * wh,
            yun = camera[1] + near,
            ydn = camera[1] - near,
            zln = camera[2] + facing[2] * perspectiveNear - facing[0] * near * wh,
            zrn = camera[2] + facing[2] * perspectiveNear + facing[0] * near * wh;
     
-    double xlf = camera[0] + facing[0] * perspectiveFar + facing[2] * far * wh,
+    float xlf = camera[0] + facing[0] * perspectiveFar + facing[2] * far * wh,
            xrf = camera[0] + facing[0] * perspectiveFar - facing[2] * far * wh,
            yuf = camera[1] + far,
            ydf = camera[1] - far,
            zlf = camera[2] + facing[2] * perspectiveFar - facing[0] * far * wh,
            zrf = camera[2] + facing[2] * perspectiveFar + facing[0] * far * wh;
 
-    double nearLeftHigh[3]  = { xln, yun, zln },
+    float nearLeftHigh[3]  = { xln, yun, zln },
            nearLeftLow[3]   = { xln, ydn, zln },
            nearRightHigh[3] = { xrn, yun, zrn },
            nearRightLow[3]  = { xrn, ydn, zrn },
@@ -597,15 +684,15 @@ void ROV::turnLeftRight( bool left )
 
 void ROV::setFacing()
 {
-    facing[0] = sin( rotation[0] * PI / 180 );
-    facing[2] = cos( rotation[0] * PI / 180 );
+    facing[0] = sinf( rotation[0] * PI / 180 );
+    facing[2] = cosf( rotation[0] * PI / 180 );
 }
 
-bool ROV::collision( vector<vector<double>> theOtherBlock, vector<vector<double>> Block )
+bool ROV::collision( vector<vector<float>> theOtherBlock, vector<vector<float>> Block )
 {
     int i;
 
-    double myXmin, myXmax, myYmin, myYmax, myZmin, myZmax, 
+    float myXmin, myXmax, myYmin, myYmax, myZmin, myZmax, 
            thatXmin, thatXmax, thatYmin, thatYmax, thatZmin, thatZmax;
     
     myXmin = thatXmin = limitPos[0].second;
@@ -644,15 +731,15 @@ bool ROV::collision( vector<vector<double>> theOtherBlock, vector<vector<double>
     return !( XnotCol || YnotCol || ZnotCol );
 }
 
-void ROV::collisionDetect( vector<vector<double>> theOtherBlock, vector<double> theOtherPos )
+void ROV::collisionDetect( vector<vector<float>> theOtherBlock, vector<float> theOtherPos )
 {
     isCollision = collision( theOtherBlock, this->blockPoints );
 
     if( isCollision )
     {
-        double a = pos[0] - theOtherPos[0], b = pos[1] - theOtherPos[1], c = pos[2] - theOtherPos[2];
-        double norm = sqrt( a*a + b*b + c*c );
+        float a = pos[0] - theOtherPos[0], b = pos[1] - theOtherPos[1], c = pos[2] - theOtherPos[2];
+        float norm = sqrt( a*a + b*b + c*c );
 
-        collisionVector = { a / norm * 2.5, b / norm * 2.5, c / norm * 2.5 };
+        collisionVector = { a / norm * (float)2.5, b / norm * (float)2.5, c / norm * (float)2.5 };
     }
 }
