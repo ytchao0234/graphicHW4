@@ -8,6 +8,7 @@ vector<vector<float>> fishPara(20, vector<float>(8));
 vector<vector<vector<float>>> fishBlock(20, vector<vector<float>>(3, vector<float>(8)));
 vector<vector<float>> stonePara(20, vector<float>(6));
 vector<vector<vector<float>>> stoneBlock(20, vector<vector<float>>(3, vector<float>(8)));
+vector<vector<float>> cupPara(5, vector<float>(7));
 vector<vector<float>> seaweedPara(20, vector<float>(6));
 
 float WCSambient[4][4] = 
@@ -24,6 +25,7 @@ void drawScene()
     drawFloor();
     drawFishes();
     drawStones();
+    drawCups();
     myROV->drawROV();
     glMaterialfv( GL_FRONT, GL_SPECULAR, noSpecular );
     glMaterialf( GL_FRONT, GL_SHININESS, noShininess );
@@ -218,9 +220,12 @@ void drawFishes()
     {
         if( i == 0 && fishOn )
         {
-            float emission[4] = { 0.5, 
-                                  0.5,
-                                  0.5,
+            myFish->position[0] = fishPara[0][0], 
+            myFish->position[1] = fishPara[0][1], 
+            myFish->position[2] = fishPara[0][2];
+            float emission[4] = { (float)0.2 + myFish->diffuse[0], 
+                                  (float)0.2 + myFish->diffuse[1],
+                                  (float)0.2 + myFish->diffuse[2],
                                   1.0 };
 
             glMaterialfv( GL_FRONT, GL_EMISSION, emission );
@@ -378,4 +383,36 @@ bool stoneCollision()
     }
 
     return col;
+}
+
+void initCups()
+{
+    for( int i = 0; i < cupPara.size(); i++ )
+    {
+        vector<float> pos = randomPos();
+        pos[0] = pos[0] / (floorSize.first * 10.0 / (float)2.0) * (float)100.0;
+        pos[2] = pos[2] / (floorSize.second * 10.0 / (float)2.0) * (float)100.0;
+
+        vector<float> color = randomColor( false );
+
+        cupPara[i] = { pos[0], pos[2], (rand()/ (RAND_MAX + (float)1.0) * 360),
+                      (rand()/ (RAND_MAX + (float)1.0)) * 3 + 1, color[0], color[1], color[2] };
+    }
+}
+
+void drawCups()
+{
+    for( int i = 0; i < cupPara.size(); i++ )
+    {
+        if( myROV->distance( cupPara[i][0], myROV->pos[1], cupPara[i][1] ) > 200.0 )
+            continue;
+
+        drawCup( cupPara[i][0], 
+                 cupPara[i][1],
+                 cupPara[i][2], 
+                 cupPara[i][3],
+                 cupPara[i][4], 
+                 cupPara[i][5], 
+                 cupPara[i][6] );
+    }
 }

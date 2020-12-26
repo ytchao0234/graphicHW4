@@ -197,6 +197,7 @@ void initWindow()
     initFloor();
     initFishes();
     initStones();
+    initCups();
 
     glMatrixMode( GL_PROJECTION );
     glLoadIdentity();

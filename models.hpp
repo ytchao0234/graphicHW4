@@ -220,3 +220,33 @@ void drawStone( float posX, float posZ, float sizeX, float sizeY, float sizeZ, f
         glutSolidDodecahedron();
     glPopMatrix();
 }
+
+void drawCup( float posX, float posZ, float angle, float size, float colorR, float colorG, float colorB )
+{
+    static float color[4];
+    color[0] = colorR;
+    color[1] = colorG;
+    color[2] = colorB;
+
+    static float specular[4] = { 0.3, 0.3, 0.3, 1.0 };
+    static float shininess = 16.0;
+
+    glPushMatrix();
+        glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, color );
+        glMaterialfv( GL_FRONT_AND_BACK, GL_SPECULAR, specular );
+        glMaterialf( GL_FRONT_AND_BACK, GL_SHININESS, shininess );
+
+        glTranslatef( posX, size / 2.0 + 2.0, posZ );
+        glRotatef( angle, 0.0, 1.0, 0.0 );
+        glScalef( size, size, size );
+        gluCylinder( cylinder, 2, 3, 5, 12, 3 );
+        glPushMatrix();
+            glTranslatef( 0.0, 0.0, 0.2 );
+            gluDisk( circleObj, 0.0, 10, 12, 3 );
+        glPopMatrix();
+        glPushMatrix();
+            glTranslatef( 0.0, 0.0, 5 );
+            gluDisk( circleObj, 0.0, 10, 12, 3 );
+        glPopMatrix();
+    glPopMatrix();
+}

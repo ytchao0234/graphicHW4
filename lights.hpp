@@ -41,13 +41,53 @@ class FishLight
         float ambient[4];
         float diffuse[4];
         float specular[4];
+        float quadratic;
+        float linear;
+        float constant;
+        enum COLOR { W, R, G, B };
+        int color;
 
     FishLight():
         position{ -75.0, 100.0, -75.0, 1.0 },
         ambient { 0.2, 0.2, 0.2, 1.0 },
         diffuse { 0.3, 0.3, 0.3, 1.0 },
-        specular{ 0.4, 0.4, 0.4, 1.0 }
+        specular{ 0.4, 0.4, 0.4, 1.0 },
+        quadratic( 0.0001 ),
+        linear( 0.01 ),
+        constant( 0.0 ),
+        color(W)
     {}
+
+    void changeColor()
+    {
+        switch( color )
+        {
+            case W:
+                ambient[0] = 0.2, ambient[1] = 0.0, ambient[2] =  0.0;
+                diffuse[0] = 0.3, diffuse[1] = 0.0, diffuse[2] =  0.0;
+                specular[0] = 0.4, specular[1] = 0.0, specular[2] =  0.0;
+                color = R;
+                break;
+            case R:
+                ambient[0] = 0.0, ambient[1] = 0.2, ambient[2] =  0.0;
+                diffuse[0] = 0.0, diffuse[1] = 0.3, diffuse[2] =  0.0;
+                specular[0] = 0.0, specular[1] = 0.4, specular[2] =  0.0;
+                color = G;
+                break;
+            case G:
+                ambient[0] = 0.0, ambient[1] = 0.0, ambient[2] =  0.2;
+                diffuse[0] = 0.0, diffuse[1] = 0.0, diffuse[2] =  0.3;
+                specular[0] = 0.0, specular[1] = 0.0, specular[2] =  0.4;
+                color = B;
+                break;
+            case B:
+                ambient[0] = 0.2, ambient[1] = 0.2, ambient[2] = 0.2;
+                diffuse[0] = 0.3, diffuse[1] = 0.3, diffuse[2] = 0.3;
+                specular[0] = 0.4, specular[1] = 0.4, specular[2] = 0.4;
+                color = W;
+                break;
+        }
+    }
 };
 
 class ArmLight
@@ -59,6 +99,9 @@ class ArmLight
         float diffuse[4];
         float specular[4];
         float exponent;
+        float quadratic;
+        float linear;
+        float constant;
 
     ArmLight():
         position{ myROV->handPos[0], myROV->handPos[1], myROV->handPos[2], 1.0 },
@@ -66,7 +109,10 @@ class ArmLight
         cutoff   ( 60.0 ),
         diffuse  { 1.0, 1.0, 1.0, 1.0 },
         specular { 0.6, 0.6, 0.6, 1.0 },
-        exponent ( 2.0 )
+        exponent ( 1.0 ),
+        quadratic( 0.00001 ),
+        linear( 0.005 ),
+        constant( 0.0 )
     {}
 
     void setPos()
@@ -130,6 +176,9 @@ void setLight()
         glLightfv( GL_LIGHT1, GL_AMBIENT, myFish->ambient );
         glLightfv( GL_LIGHT1, GL_DIFFUSE, myFish->diffuse );
         glLightfv( GL_LIGHT1, GL_SPECULAR, myFish->specular );
+        glLightf( GL_LIGHT1, GL_QUADRATIC_ATTENUATION, myFish->quadratic );
+        glLightf( GL_LIGHT1, GL_LINEAR_ATTENUATION, myFish->linear );
+        glLightf( GL_LIGHT1, GL_CONSTANT_ATTENUATION, myFish->constant );
     }
     else
     {
@@ -137,6 +186,9 @@ void setLight()
         glLightfv( GL_LIGHT1, GL_AMBIENT, noAmbient );
         glLightfv( GL_LIGHT1, GL_DIFFUSE, noDiffuse );
         glLightfv( GL_LIGHT1, GL_SPECULAR, noSpecular );
+        glLightf( GL_LIGHT1, GL_QUADRATIC_ATTENUATION, myFish->quadratic );
+        glLightf( GL_LIGHT1, GL_LINEAR_ATTENUATION, myFish->linear );
+        glLightf( GL_LIGHT1, GL_CONSTANT_ATTENUATION, myFish->constant );
     }
     
 
@@ -150,6 +202,9 @@ void setLight()
         glLightfv(GL_LIGHT2, GL_DIFFUSE, armLight->diffuse );
         glLightfv(GL_LIGHT2, GL_SPECULAR, armLight->specular );
         glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, armLight->exponent );
+        glLightf( GL_LIGHT2, GL_QUADRATIC_ATTENUATION, armLight->quadratic );
+        glLightf( GL_LIGHT2, GL_LINEAR_ATTENUATION, armLight->linear );
+        glLightf( GL_LIGHT2, GL_CONSTANT_ATTENUATION, armLight->constant );
     }
     else
     {
@@ -159,6 +214,9 @@ void setLight()
         glLightfv(GL_LIGHT2, GL_DIFFUSE, noDiffuse );
         glLightfv(GL_LIGHT2, GL_SPECULAR, noSpecular );
         glLightf(GL_LIGHT2, GL_SPOT_EXPONENT, 0.0 );
+        glLightf( GL_LIGHT2, GL_QUADRATIC_ATTENUATION, armLight->quadratic );
+        glLightf( GL_LIGHT2, GL_LINEAR_ATTENUATION, armLight->linear );
+        glLightf( GL_LIGHT2, GL_CONSTANT_ATTENUATION, armLight->constant );
     }
     
 }

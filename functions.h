@@ -25,8 +25,9 @@ void zoomOut( bool = true );
 
 void drawTrapezoidalCube();
 void drawPyramid( bool );
-void drawFish( bool );
-void drawStone();
+void drawFish( float, float, float, float, float, float, float, float );
+void drawStone( float, float, float, float, float, float );
+void drawCup( float, float, float, float, float, float, float );
 
 void drawScene();
 void drawWCS();
@@ -42,6 +43,7 @@ bool graspFish();
 void initStones();
 void drawStones();
 bool stoneCollision();
+void drawCups();
 
 void setLight();
 

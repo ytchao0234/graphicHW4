@@ -41,6 +41,10 @@ void keyCtrl( unsigned char keyValue, int x, int y )
             sunMove = !sunMove;
             break;
 
+        case 'n':
+            myFish->changeColor();
+            break;
+
         case ',':
             sunOn = !sunOn;
             break;
