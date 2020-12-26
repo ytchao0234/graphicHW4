@@ -23,9 +23,9 @@ class ROV
         vector<float> shininess;
 
         ROV(): pos( { 20.0, 25.0, 20.0 } ),
-               limitPos( {{ -900.0, 900.0 }, 
-                          { 25.0, 400.0 },
-                          { -900.0, 900.0 }} ),
+               limitPos( {{ -2000.0, 2000.0 }, 
+                          { 25.0, 300.0 },
+                          { -2000.0, 2000.0 }} ),
                rotation( { 0.0, 0.0, 1.0, 0.0 } ),
                facing( { 0.0, 0.0, 1.0 } ),
                acceleration( { 0.0, 0.0, 0.0 } ),
@@ -83,21 +83,21 @@ class ROV
 
             specular = 
             {
-                { 0.3, 0.3, 0.3, 1.0 },
-                { 0.3, 0.3, 0.3, 1.0 },
-                { 0.3, 0.3, 0.3, 1.0 },
-                { 0.3, 0.3, 0.3, 1.0 },
-                { 0.3, 0.3, 0.3, 1.0 },
-                { 0.3, 0.3, 0.3, 1.0 },
-                { 0.3, 0.3, 0.3, 1.0 },
-                { 0.3, 0.3, 0.3, 1.0 },
-                { 0.3, 0.3, 0.3, 1.0 },
-                { 0.3, 0.3, 0.3, 1.0 }
+                { 0.4, 0.4, 0.4, 1.0 },
+                { 0.4, 0.4, 0.4, 1.0 },
+                { 0.4, 0.4, 0.4, 1.0 },
+                { 0.4, 0.4, 0.4, 1.0 },
+                { 0.4, 0.4, 0.4, 1.0 },
+                { 0.4, 0.4, 0.4, 1.0 },
+                { 0.4, 0.4, 0.4, 1.0 },
+                { 0.4, 0.4, 0.4, 1.0 },
+                { 0.4, 0.4, 0.4, 1.0 },
+                { 0.4, 0.4, 0.4, 1.0 }
             };
 
             shininess =
             {
-                8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0, 8.0
+                64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0
             };
         }
 
@@ -124,6 +124,7 @@ class ROV
         void turnLeftRight( bool );
         void setFacing();
 
+        float distance( float, float, float );
         bool collision( vector<vector<float>>, vector<vector<float>> );
         void collisionDetect( vector<vector<float>>, vector<float> );
 };
@@ -686,6 +687,11 @@ void ROV::setFacing()
 {
     facing[0] = sinf( rotation[0] * PI / 180 );
     facing[2] = cosf( rotation[0] * PI / 180 );
+}
+
+float ROV::distance( float x, float y, float z )
+{
+    return sqrt((x-pos[0])*(x-pos[0]) + (y-pos[1])*(y-pos[1]) + (z-pos[2])*(z-pos[2]));
 }
 
 bool ROV::collision( vector<vector<float>> theOtherBlock, vector<vector<float>> Block )

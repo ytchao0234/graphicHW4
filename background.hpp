@@ -1,13 +1,13 @@
-pair<int, int> floorSize = { 180, 180 };
+pair<int, int> floorSize = { 400, 400 };
 int viewSize = 20;
 
 vector<vector<vector<float>>> floorColor( floorSize.first + 1, 
                                            vector<vector<float>>( floorSize.second + 1 ));
 
-vector<vector<float>> fishPara(15, vector<float>(8));
-vector<vector<vector<float>>> fishBlock(15, vector<vector<float>>(3, vector<float>(8)));
-vector<vector<float>> stonePara(15, vector<float>(6));
-vector<vector<vector<float>>> stoneBlock(15, vector<vector<float>>(3, vector<float>(8)));
+vector<vector<float>> fishPara(20, vector<float>(8));
+vector<vector<vector<float>>> fishBlock(20, vector<vector<float>>(3, vector<float>(8)));
+vector<vector<float>> stonePara(20, vector<float>(6));
+vector<vector<vector<float>>> stoneBlock(20, vector<vector<float>>(3, vector<float>(8)));
 vector<vector<float>> seaweedPara(20, vector<float>(6));
 
 float WCSambient[4][4] = 
@@ -25,6 +25,8 @@ void drawScene()
     drawFishes();
     drawStones();
     myROV->drawROV();
+    glMaterialfv( GL_FRONT, GL_SPECULAR, noSpecular );
+    glMaterialf( GL_FRONT, GL_SHININESS, noShininess );
 }
 
 void drawWCS()
@@ -118,20 +120,20 @@ void drawFloor()
 
 vector<float> randomPos()
 {
-    float rx = (rand() / (RAND_MAX + 1.0)) * 1700;
-    float ry = (rand() / (RAND_MAX + 1.0)) * 200 + 30;
-    float rz = (rand() / (RAND_MAX + 1.0)) * 1700;
+    float rx = (rand() / (RAND_MAX + 1.0)) * 3800;
+    float ry = (rand() / (RAND_MAX + 1.0)) * 150 + 30;
+    float rz = (rand() / (RAND_MAX + 1.0)) * 3800;
     
     vector<float> position;
 
-    if( rx > 850 ) rx = 850 - rx;
-    if( rz > 850 ) rz = 850 - rz;
+    if( rx > 1900 ) rx = 1900 - rx;
+    if( rz > 1900 ) rz = 1900 - rz;
 
-    if( rx > 0 && rx < 30 ) rx += 30;
-    else if( rx < 0 && rx > -30 ) rx -= 30;
+    if( rx > 0 && rx < 75 ) rx += 75;
+    else if( rx < 0 && rx > -75 ) rx -= 75;
 
-    if( rz > 0 && rz < 30 ) rz += 30;
-    else if( rz < 0 && rz > -30 ) rz -= 30;
+    if( rz > 0 && rz < 75 ) rz += 75;
+    else if( rz < 0 && rz > -75 ) rz -= 75;
 
     position = { rx, ry, rz };
 
@@ -191,6 +193,13 @@ void initFishes()
                         (rand()/ (RAND_MAX + (float)1.0) * 360), (rand()/ (RAND_MAX + (float)1.0)) * (float)10.0 + (float)5.0,
                         color[0], color[1], color[2]};
 
+        if( i == 0 )
+        {
+            fishPara[i][0] = -75.0;
+            fishPara[i][1] = 100.0;
+            fishPara[i][2] = -75.0;
+        }
+
         initFishBlock( i );
     }
 }
@@ -207,6 +216,23 @@ void drawFishes()
 
     for( int i = 0; i < fishPara.size(); i++ )
     {
+        if( i == 0 && fishOn )
+        {
+            float emission[4] = { 0.5, 
+                                  0.5,
+                                  0.5,
+                                  1.0 };
+
+            glMaterialfv( GL_FRONT, GL_EMISSION, emission );
+        }
+        else if( i == 1 )
+        {
+            glMaterialfv( GL_FRONT, GL_EMISSION, noEmission );
+        }
+
+        if( myROV->distance( fishPara[i][0], myROV->pos[1], fishPara[i][2] ) > 200.0 )
+            continue;
+        
         drawFish( fishPara[i][0], 
                   fishPara[i][1],
                   fishPara[i][2], 
@@ -315,12 +341,15 @@ void drawStones()
 {
     for( int i = 0; i < stonePara.size(); i++ )
     {
+        if( myROV->distance( stonePara[i][0], myROV->pos[1], stonePara[i][1] ) > 200.0 )
+            continue;
+
         drawStone( stonePara[i][0], 
-                               stonePara[i][1],
-                               stonePara[i][2], 
-                               stonePara[i][3],
-                               stonePara[i][4], 
-                               stonePara[i][5]);
+                   stonePara[i][1],
+                   stonePara[i][2], 
+                   stonePara[i][3],
+                   stonePara[i][4], 
+                   stonePara[i][5]);
 
         // if( myROV->toDrawBlock )
         // {

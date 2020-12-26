@@ -24,10 +24,17 @@ using namespace std;
 int windowWidth = 1200, windowHeight = 800;
 GLUquadric *sphere = NULL, *cylinder = NULL, *circleObj = NULL;
 float global_ambient[4] = {0.2, 0.2, 0.2, 1.0};
+float noEmission[4] = { 0.0, 0.0, 0.0, 1.0 };
+float noSpecular[4] = { 0.0, 0.0, 0.0, 1.0 };
+float noAmbient[4] = { 0.0, 0.0, 0.0, 1.0 };
+float noDiffuse[4] = { 0.0, 0.0, 0.0, 1.0 };
+float noShininess = 0.0;
 
 float orthoNum = 300;
 float perspectiveEye = 90.0;
 float perspectiveNear = 1.5, perspectiveFar = 400.0;
+bool sunOn = true, fishOn = true, armOn = true;
+bool sunMove = true;
 
 enum KEYBOARD
 {

@@ -37,6 +37,22 @@ void keyCtrl( unsigned char keyValue, int x, int y )
             myROV->graspingFish = -1;
             break;
 
+        case 'm':
+            sunMove = !sunMove;
+            break;
+
+        case ',':
+            sunOn = !sunOn;
+            break;
+        
+        case '.':
+            fishOn = !fishOn;
+            break;
+
+        case '/':
+            armOn = !armOn;
+            break;
+
         case '1':
             viewing = OrthoX;
             break;

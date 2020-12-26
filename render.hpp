@@ -142,9 +142,7 @@ void initWindow()
 
     glClearColor( 0.05, 0.05, 0.3, 1.0 ); 
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-    glShadeModel( GL_SMOOTH );
     glEnable( GL_DEPTH_TEST );
-    glEnable( GL_NORMALIZE );
 
     if( !sphere )
     {
@@ -186,13 +184,15 @@ void initWindow()
         mySun = new SunLight();
     }
 
-    glEnable( GL_LIGHTING );
-    glEnable( GL_LIGHT0 );
+    if( !myFish )
+    {
+        myFish = new FishLight();
+    }
 
-    glLightModeli( GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE );
-    glLightModelfv( GL_LIGHT_MODEL_AMBIENT, global_ambient );
-    glCullFace( GL_BACK );
-    glEnable( GL_CULL_FACE );
+    if( !armLight )
+    {
+        armLight = new ArmLight();
+    }
 
     initFloor();
     initFishes();

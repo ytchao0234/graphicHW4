@@ -6,6 +6,8 @@
 class ROV;
 class Info;
 class SunLight;
+class FishLight;
+class ArmLight;
 
 void display();
 void reshape( int, int );
@@ -46,11 +48,13 @@ void setLight();
 ROV *myROV = NULL;
 Info *myInfo1 = NULL, *myInfo2 = NULL;
 SunLight *mySun = NULL;
+FishLight *myFish = NULL;
+ArmLight *armLight = NULL;
 vector<unsigned char> pressingKey;
 
-#include "lights.hpp"
 #include "models.hpp"
 #include "ROV.hpp"
+#include "lights.hpp"
 #include "background.hpp"
 #include "Info.hpp"
 #include "control.hpp"
