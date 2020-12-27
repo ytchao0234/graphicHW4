@@ -305,6 +305,36 @@ void pressing()
             case 'v':
                 zoomOut( false );
                 break;
+
+            case '-':
+                armLight->cutoff -= 1.0;
+                if( armLight->cutoff <= 30.0 ) armLight->cutoff = 30.0;
+                break;
+            
+            case '=':
+                armLight->cutoff += 1.0;
+                if( armLight->cutoff >= 90.0 ) armLight->cutoff = 90.0;
+                break;
+
+            case 'p':
+                armLight->exponent -= 0.1;
+                if( armLight->exponent <= 0.0 ) armLight->exponent = 0.0;
+                break;
+            
+            case '[':
+                armLight->exponent += 0.1;
+                if( armLight->exponent >= 16.0 ) armLight->exponent = 16.0;
+                break;
+
+            case ']':
+                armLight->angle += 1;
+                if( armLight->angle > 360.0 ) armLight->angle = 0.0;
+                break;
+            
+            case '\\':
+                armLight->angle -= 1;
+                if( armLight->angle < -360.0 ) armLight->angle = 0.0;
+                break;
         }
     }
 

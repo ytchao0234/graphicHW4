@@ -91,6 +91,43 @@ void Info::drawText()
 
     string strData;
 
+    string time = "Time: ";
+    strData = to_string( mySun->time / 3600 );
+    if( strData.length() < 2 ) strData = "0" + strData;
+    time += strData + " : ";
+    strData = to_string( mySun->time % 3600 / 60 );
+    if( strData.length() < 2 ) strData = "0" + strData;
+    time += strData;
+    infos.emplace_back( time );
+
+    string light = "Light: ";
+    if( sunOn ) light += "Sun On, ";
+    else light += "Sun Off, ";
+    if( !fishOn ) light += "Fish Off, ";
+    else if( myFish->color == myFish->COLOR::W ) light += "Fish White, ";
+    else if( myFish->color == myFish->COLOR::R ) light += "Fish Red, ";
+    else if( myFish->color == myFish->COLOR::G ) light += "Fish Greem, ";
+    else if( myFish->color == myFish->COLOR::B ) light += "Fish Blue, ";
+    if( armOn ) light += "Flashlight On";
+    else light += "Flashlight Off";
+    infos.emplace_back( light );
+
+    if( armOn )
+    {
+        string spotLight = "exponent: ";
+        strData = to_string( armLight->exponent );
+        spotLight += strData.substr( 0, strData.find( "." ) + 2 ) + ", cutoff: ";
+        strData = to_string( armLight->cutoff );
+        spotLight += strData.substr( 0, strData.find( "." ) + 2 ) + ", direction: ";
+        strData = to_string( armLight->direction[0] );
+        spotLight += strData.substr( 0, strData.find( "." ) + 2 ) + ", ";
+        strData = to_string( armLight->direction[1] );
+        spotLight += strData.substr( 0, strData.find( "." ) + 2 ) + ", ";
+        strData = to_string( armLight->direction[2] );
+        spotLight += strData.substr( 0, strData.find( "." ) + 2 );
+        infos.emplace_back( spotLight );
+    }
+
     string position = "Position: ";
     strData = to_string( myROV->pos[0] );
     position += strData.substr( 0, strData.find( "." ) + 2 ) + ", ";
@@ -100,11 +137,6 @@ void Info::drawText()
     position += strData.substr( 0, strData.find( "." ) + 2 );
     infos.emplace_back( position );
 
-    string angle = "Angle: ";
-    strData = to_string( myROV->rotation[0] );
-    angle += strData.substr( 0, strData.find( "." ) + 2 );
-    infos.emplace_back( angle );
-
     string facing = "Facing: ";
     strData = to_string( myROV->facing[0] );
     facing += strData.substr( 0, strData.find( "." ) + 2 ) + ", ";
@@ -112,6 +144,13 @@ void Info::drawText()
     facing += strData.substr( 0, strData.find( "." ) + 2 ) + ", ";
     strData = to_string( myROV->facing[2] );
     facing += strData.substr( 0, strData.find( "." ) + 2 );
+    // infos.emplace_back( facing );
+
+    string angle = "Angle: ";
+    strData = to_string( myROV->rotation[0] );
+    angle += strData.substr( 0, strData.find( "." ) + 2 );
+    // infos.emplace_back( angle );
+    facing += ", " + angle;
     infos.emplace_back( facing );
 
     string speed = "Speed: ";
@@ -121,12 +160,14 @@ void Info::drawText()
     speed += strData.substr( 0, strData.find( "." ) + 2 ) + ", ";
     strData = to_string( myROV->speed[2] );
     speed += strData.substr( 0, strData.find( "." ) + 2 );
-    infos.emplace_back( speed );
+    // infos.emplace_back( speed );
 
     string maxSpeed = "Max Speed: ";
     strData = to_string( myROV->maxSpeed );
     maxSpeed += strData.substr( 0, strData.find( "." ) + 2 );
-    infos.emplace_back( maxSpeed );
+    // infos.emplace_back( maxSpeed );
+    speed += ", " + maxSpeed;
+    infos.emplace_back( speed );
 
     // ---------------------------------------
 
@@ -172,8 +213,8 @@ void Info::drawMap()
     float x = (myROV->pos[0] - myROV->limitPos[0].first) / ( myROV->limitPos[0].second - myROV->limitPos[0].first );
     float z = (myROV->pos[2] - myROV->limitPos[2].first) / ( myROV->limitPos[2].second - myROV->limitPos[2].first );
 
-    float facingx = (myROV->pos[0] + myROV->facing[0] * 50.0 - myROV->limitPos[0].first) / ( myROV->limitPos[0].second - myROV->limitPos[0].first );
-    float facingz = (myROV->pos[2] + myROV->facing[2] * 50.0 - myROV->limitPos[2].first) / ( myROV->limitPos[2].second - myROV->limitPos[2].first );
+    float facingx = (myROV->pos[0] + myROV->facing[0] * 75.0 - myROV->limitPos[0].first) / ( myROV->limitPos[0].second - myROV->limitPos[0].first );
+    float facingz = (myROV->pos[2] + myROV->facing[2] * 75.0 - myROV->limitPos[2].first) / ( myROV->limitPos[2].second - myROV->limitPos[2].first );
 
     glColor3f( 1.0, 0.0, 0.0 );
     glPointSize( 5.0 );

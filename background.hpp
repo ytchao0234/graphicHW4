@@ -21,14 +21,14 @@ float WCSambient[4][4] =
 
 void drawScene()
 {
+    glMaterialfv( GL_FRONT, GL_SPECULAR, noSpecular );
+    glMaterialf( GL_FRONT, GL_SHININESS, noShininess );
     drawWCS();
     drawFloor();
     drawFishes();
     drawStones();
     drawCups();
     myROV->drawROV();
-    glMaterialfv( GL_FRONT, GL_SPECULAR, noSpecular );
-    glMaterialf( GL_FRONT, GL_SHININESS, noShininess );
 }
 
 void drawWCS()
@@ -392,6 +392,12 @@ void initCups()
         vector<float> pos = randomPos();
         pos[0] = pos[0] / (floorSize.first * 10.0 / (float)2.0) * (float)100.0;
         pos[2] = pos[2] / (floorSize.second * 10.0 / (float)2.0) * (float)100.0;
+
+        if( pos[0] > 0 && pos[0] < 20.0 ) pos[0] += 20.0;
+        else if(  pos[0] < 0 && pos[0] > -20.0 ) pos[0] -= 20.0;
+
+        if( pos[1] > 0 && pos[1] < 20.0 ) pos[1] += 20.0;
+        else if( pos[1] < 0 && pos[1] > -20.0 ) pos[1] -= 20.0;
 
         vector<float> color = randomColor( false );
 

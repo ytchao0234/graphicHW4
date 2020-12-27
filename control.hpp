@@ -39,6 +39,9 @@ void keyCtrl( unsigned char keyValue, int x, int y )
 
         case 'm':
             sunMove = !sunMove;
+            if( !sunMove )
+                mySun->angle = 0.0;
+                mySun->time = 43200;
             break;
 
         case 'n':

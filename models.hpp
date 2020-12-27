@@ -241,12 +241,9 @@ void drawCup( float posX, float posZ, float angle, float size, float colorR, flo
         glScalef( size, size, size );
         gluCylinder( cylinder, 2, 3, 5, 12, 3 );
         glPushMatrix();
-            glTranslatef( 0.0, 0.0, 0.2 );
-            gluDisk( circleObj, 0.0, 10, 12, 3 );
-        glPopMatrix();
-        glPushMatrix();
-            glTranslatef( 0.0, 0.0, 5 );
-            gluDisk( circleObj, 0.0, 10, 12, 3 );
+            glTranslatef( 0.0, 0.0, 0.3 );
+            glRotatef( 180.0, 0.0, 1.0, 0.0 );
+            gluDisk( circleObj, 0.0, 2, 12, 1 );
         glPopMatrix();
     glPopMatrix();
 }

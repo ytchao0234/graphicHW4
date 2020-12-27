@@ -5,31 +5,40 @@ class SunLight
         float ambient[4];
         float diffuse[4];
         float specular[4];
+        float angle;
+        int time;
 
     SunLight():
         position{ 0.0, 1.0, 0.0, 0.0 },
         ambient { 0.2, 0.2, 0.2, 1.0 },
-        diffuse { 0.3, 0.3, 0.3, 1.0 },
-        specular{ 0.3, 0.3, 0.3, 1.0 }
+        diffuse { 0.5, 0.5, 0.5, 1.0 },
+        specular{ 0.3, 0.3, 0.3, 1.0 },
+        angle( 0.0 ),
+        time( 43200 )
     {}
 
     void move()
     {
-        static float angle = 0.0;
-
         position[0] = cosf( (90.0-angle) * PI / 180.0 );
         position[1] = sinf( (90.0-angle) * PI / 180.0 );
 
         angle += 0.1;
+        time += 24;
 
-        if( angle > 90.0 || angle > 270.0 )
+        if( angle > 90.0 && angle < 270.0 )
         {
-            angle += 0.2;
+            angle += 0.1;
+            time += 24;
         }
 
         if( angle >= 360.0 )
         {
             angle = 0.0;
+        }
+
+        if( time >= 86400 )
+        {
+            time = 0;
         }
     }
 };
@@ -50,7 +59,7 @@ class FishLight
     FishLight():
         position{ -75.0, 100.0, -75.0, 1.0 },
         ambient { 0.2, 0.2, 0.2, 1.0 },
-        diffuse { 0.3, 0.3, 0.3, 1.0 },
+        diffuse { 0.7, 0.7, 0.7, 1.0 },
         specular{ 0.4, 0.4, 0.4, 1.0 },
         quadratic( 0.0001 ),
         linear( 0.01 ),
@@ -99,6 +108,7 @@ class ArmLight
         float diffuse[4];
         float specular[4];
         float exponent;
+        float angle;
         float quadratic;
         float linear;
         float constant;
@@ -106,10 +116,11 @@ class ArmLight
     ArmLight():
         position{ myROV->handPos[0], myROV->handPos[1], myROV->handPos[2], 1.0 },
         direction{ myROV->facing[0], myROV->facing[1], myROV->facing[2], 0.0 },
-        cutoff   ( 60.0 ),
+        cutoff   ( 75.0 ),
         diffuse  { 1.0, 1.0, 1.0, 1.0 },
-        specular { 0.6, 0.6, 0.6, 1.0 },
-        exponent ( 1.0 ),
+        specular { 0.3, 0.3, 0.3, 1.0 },
+        exponent ( 3.0 ),
+        angle( 0.0 ),
         quadratic( 0.00001 ),
         linear( 0.005 ),
         constant( 0.0 )
@@ -121,12 +132,12 @@ class ArmLight
         position[1] = myROV->handPos[1];
         position[2] = myROV->handPos[2];
     }
-
+    
     void setDir()
     {
-        direction[0] = myROV->facing[0];
+        direction[0] = sinf( ( myROV->rotation[0] + angle ) * PI / 180.0 );
         direction[1] = myROV->facing[1];
-        direction[2] = myROV->facing[2];
+        direction[2] = cosf( ( myROV->rotation[0] + angle ) * PI / 180.0 );
     }
 };
 
@@ -138,8 +149,8 @@ void setLight()
 
     glLightModeli( GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE );
     glLightModelfv( GL_LIGHT_MODEL_AMBIENT, global_ambient );
-    glCullFace( GL_BACK );
-    glEnable( GL_CULL_FACE );
+    // glCullFace( GL_BACK );
+    // glEnable( GL_CULL_FACE );
 
     glEnable( GL_LIGHT0 );
     glEnable( GL_LIGHT1 );
