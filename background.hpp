@@ -197,7 +197,7 @@ void initFishes()
 
         if( i == 0 )
         {
-            fishPara[i][0] = -75.0;
+            fishPara[i][0] = -67.0;
             fishPara[i][1] = 100.0;
             fishPara[i][2] = -75.0;
         }

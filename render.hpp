@@ -307,13 +307,55 @@ void pressing()
                 break;
 
             case '-':
-                armLight->cutoff -= 1.0;
-                if( armLight->cutoff <= 30.0 ) armLight->cutoff = 30.0;
+                myROV->handAngle[2] += 1;
+                if( myROV->handAngle[2] > 360.0 ) myROV->handAngle[2] = 0.0;
+                if( myROV->handAngle[1] > 90.0 )
+                {
+                    myROV->handFacing[0] = -sinf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
+                    myROV->handFacing[2] = -cosf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
+                }
+                else
+                {
+                    myROV->handFacing[0] = sinf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
+                    myROV->handFacing[2] = cosf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
+                }
                 break;
             
             case '=':
-                armLight->cutoff += 1.0;
-                if( armLight->cutoff >= 90.0 ) armLight->cutoff = 90.0;
+                myROV->handAngle[2] -= 1;
+                if( myROV->handAngle[2] < -360.0 ) myROV->handAngle[2] = 0.0;
+                if( myROV->handAngle[1] > 90.0 )
+                {
+                    myROV->handFacing[0] = -sinf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
+                    myROV->handFacing[2] = -cosf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
+                }
+                else
+                {
+                    myROV->handFacing[0] = sinf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
+                    myROV->handFacing[2] = cosf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
+                }
+                break;
+
+            case '9':
+                myROV->handAngle[1] += 1;
+                if( myROV->handAngle[1] > 210.0 ) myROV->handAngle[1] = 210.0;
+                myROV->handFacing[1] = sinf( myROV->handAngle[1] * PI / 180 );
+                if( fabsf(myROV->handAngle[1] - 90.0) <= 0.1 )
+                {
+                    myROV->handFacing[0] = -myROV->handFacing[0];
+                    myROV->handFacing[2] = -myROV->handFacing[2];
+                }
+                break;
+
+            case '0':
+                myROV->handAngle[1] -= 1;
+                if( myROV->handAngle[1] < -30.0 ) myROV->handAngle[1] = -30.0;
+                myROV->handFacing[1] = sinf( myROV->handAngle[1] * PI / 180 );
+                if( fabsf(myROV->handAngle[1] - 90.0) <= 0.1 )
+                {
+                    myROV->handFacing[0] = -myROV->handFacing[0];
+                    myROV->handFacing[2] = -myROV->handFacing[2];
+                }
                 break;
 
             case 'p':
@@ -327,17 +369,13 @@ void pressing()
                 break;
 
             case ']':
-                myROV->handAngle += 1;
-                if( myROV->handAngle > 360.0 ) myROV->handAngle = 0.0;
-                myROV->handFacing[0] = sinf( ( myROV->rotation[0] + myROV->handAngle ) * PI / 180 );
-                myROV->handFacing[2] = cosf( ( myROV->rotation[0] + myROV->handAngle ) * PI / 180 );
+                armLight->cutoff -= 1.0;
+                if( armLight->cutoff <= 30.0 ) armLight->cutoff = 30.0;
                 break;
             
             case '\\':
-                myROV->handAngle -= 1;
-                if( myROV->handAngle < -360.0 ) myROV->handAngle = 0.0;
-                myROV->handFacing[0] = sinf( ( myROV->rotation[0] + myROV->handAngle ) * PI / 180 );
-                myROV->handFacing[2] = cosf( ( myROV->rotation[0] + myROV->handAngle ) * PI / 180 );
+                armLight->cutoff += 1.0;
+                if( armLight->cutoff >= 90.0 ) armLight->cutoff = 90.0;
                 break;
         }
     }

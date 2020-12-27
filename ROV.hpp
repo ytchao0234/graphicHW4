@@ -6,7 +6,7 @@ class ROV
         vector<float> rotation;
         vector<float> facing;
         vector<float> handFacing;
-        float handAngle;
+        vector<float> handAngle;
         vector<float> acceleration;
         vector<float> speed;
         vector<bool> isMoving;
@@ -32,7 +32,7 @@ class ROV
                rotation( { 0.0, 0.0, 1.0, 0.0 } ),
                facing( { 0.0, 0.0, 1.0 } ),
                handFacing( { 0.0, 0.0, 1.0 } ),
-               handAngle( 0.0 ),
+               handAngle( { 0.0, 0.0, 0.0 } ),
                acceleration( { 0.0, 0.0, 0.0 } ),
                speed( { 0.0, 0.0, 0.0 } ),
                isMoving( { false, false, false } ),
@@ -90,7 +90,7 @@ class ROV
             {
                 { 0.4, 0.4, 0.4, 1.0 },
                 { 0.4, 0.4, 0.4, 1.0 },
-                { 0.4, 0.4, 0.4, 1.0 },
+                { 0.7, 0.7, 0.7, 1.0 },
                 { 0.4, 0.4, 0.4, 1.0 },
                 { 0.4, 0.4, 0.4, 1.0 },
                 { 0.4, 0.4, 0.4, 1.0 },
@@ -292,19 +292,21 @@ void ROV::drawCamera()
             glMaterialfv( GL_FRONT, GL_SPECULAR, &(specular[2][0]) );
             glMaterialf( GL_FRONT, GL_SHININESS, shininess[2] );
 
-            glTranslatef( 0.0, 2.5, 0.25 );
-            gluDisk( circleObj, 0.0, 1.5, 12, 1 );
+            glTranslatef( 0.0, 2.5, -0.5 );
+            // gluDisk( circleObj, 0.0, 1.5, 12, 1 );
+
+            gluSphere( sphere, 1.5, 12, 12 );
         glPopMatrix();
 
-        glPushMatrix();
-            glMaterialfv( GL_FRONT, GL_AMBIENT, &(ambient[3][0]) );
-            glMaterialfv( GL_FRONT, GL_DIFFUSE, &(diffuse[3][0]) );
-            glMaterialfv( GL_FRONT, GL_SPECULAR, &(specular[3][0]) );
-            glMaterialf( GL_FRONT, GL_SHININESS, shininess[3] );
+        // glPushMatrix();
+        //     glMaterialfv( GL_FRONT, GL_AMBIENT, &(ambient[3][0]) );
+        //     glMaterialfv( GL_FRONT, GL_DIFFUSE, &(diffuse[3][0]) );
+        //     glMaterialfv( GL_FRONT, GL_SPECULAR, &(specular[3][0]) );
+        //     glMaterialf( GL_FRONT, GL_SHININESS, shininess[3] );
 
-            glTranslatef( 0.0, 2.5, 0.251 );
-            gluDisk( circleObj, 0.0, 0.25, 12, 1 );
-        glPopMatrix();
+        //     glTranslatef( 0.0, 2.5, 0.251 );
+        //     gluDisk( circleObj, 0.0, 0.25, 12, 1 );
+        // glPopMatrix();
 
     glPopMatrix();
 }
@@ -433,7 +435,8 @@ void ROV::drawArm()
                 gluCylinder( cylinder, 1, 1, 5, 12, 3 );
                 glTranslatef( 0.0, 0.0, 5.0 );
                 glRotatef( 90.0, 1.0, 0.0, 0.0 );
-                glRotatef( handAngle, 0.0, 1.0, 0.0 );
+                glRotatef( handAngle[2], 0.0, 1.0, 0.0 );
+                glRotatef( -handAngle[1], 1.0, 0.0, 0.0 );
                 gluSphere( sphere, 1, 12, 12 );
                 if( armOn )
                     glMaterialfv( GL_FRONT, GL_EMISSION, &(armEmission[0]) );
@@ -712,8 +715,17 @@ void ROV::setFacing()
     facing[0] = sinf( rotation[0] * PI / 180 );
     facing[2] = cosf( rotation[0] * PI / 180 );
 
-    myROV->handFacing[0] = sinf( ( myROV->rotation[0] + myROV->handAngle ) * PI / 180 );
-    myROV->handFacing[2] = cosf( ( myROV->rotation[0] + myROV->handAngle ) * PI / 180 );
+    myROV->handFacing[1] = handFacing[1] = sinf( handAngle[1] * PI / 180 );
+    if( myROV->handAngle[1] > 90.0 )
+    {
+        myROV->handFacing[0] = -sinf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
+        myROV->handFacing[2] = -cosf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
+    }
+    else
+    {
+        myROV->handFacing[0] = sinf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
+        myROV->handFacing[2] = cosf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
+    }
 }
 
 float ROV::distance( float x, float y, float z )
