@@ -106,7 +106,7 @@ void Info::drawText()
     if( !fishOn ) light += "Fish Off, ";
     else if( myFish->color == myFish->COLOR::W ) light += "Fish White, ";
     else if( myFish->color == myFish->COLOR::R ) light += "Fish Red, ";
-    else if( myFish->color == myFish->COLOR::G ) light += "Fish Greem, ";
+    else if( myFish->color == myFish->COLOR::G ) light += "Fish Green, ";
     else if( myFish->color == myFish->COLOR::B ) light += "Fish Blue, ";
     if( armOn ) light += "Flashlight On";
     else light += "Flashlight Off";
@@ -172,12 +172,40 @@ void Info::drawText()
     // ---------------------------------------
 
     void *font = GLUT_BITMAP_9_BY_15;
+    int red = 0, green = 0, blue = 0;
 
     for( auto const str: infos )
     {
-        for( auto const text: str )
+        for( int i = 0; i < str.length(); i++ )
         {
-            glutBitmapCharacter( font, text );
+            if( str.substr(i, 3) == "Red" )
+                red = 3;
+            else if( str.substr(i, 5) == "Green" )
+                green = 5;
+            else if( str.substr(i, 4) == "Blue" )
+                blue = 4;
+
+            if( red > 0 )
+            {
+                red--;
+                glColor3f( 1.0, 0.0, 0.0 );
+            }
+            else if( green > 0 )
+            {
+                green--;
+                glColor3f( 0.0, 1.0, 0.0 );
+            }
+            else if( blue > 0 )
+            {
+                blue--;
+                glColor3f( 0.0, 0.0, 1.0 );
+            }
+            else
+                glColor3f( 1.0, 1.0, 1.0 );
+
+            if( str.substr(0, 4) != "Info" )
+                glRasterPos2i( initX + 20.0 + i * 10.0, height - (initY + (lines-1) * step ));
+            glutBitmapCharacter( font, str[i] );
         }
 
         glRasterPos2i( initX + 20.0, height - (initY + lines * step ) );

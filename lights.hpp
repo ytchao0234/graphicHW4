@@ -129,15 +129,15 @@ class ArmLight
     void setPos()
     {
         position[0] = myROV->handPos[0];
-        position[1] = myROV->handPos[1];
+        position[1] = myROV->handPos[1] + (float)5.0;
         position[2] = myROV->handPos[2];
     }
     
     void setDir()
     {
-        direction[0] = sinf( ( myROV->rotation[0] + angle ) * PI / 180.0 );
-        direction[1] = myROV->facing[1];
-        direction[2] = cosf( ( myROV->rotation[0] + angle ) * PI / 180.0 );
+        direction[0] = myROV->handFacing[0];
+        direction[1] = myROV->handFacing[1];
+        direction[2] = myROV->handFacing[2];
     }
 };
 

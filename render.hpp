@@ -327,13 +327,17 @@ void pressing()
                 break;
 
             case ']':
-                armLight->angle += 1;
-                if( armLight->angle > 360.0 ) armLight->angle = 0.0;
+                myROV->handAngle += 1;
+                if( myROV->handAngle > 360.0 ) myROV->handAngle = 0.0;
+                myROV->handFacing[0] = sinf( ( myROV->rotation[0] + myROV->handAngle ) * PI / 180 );
+                myROV->handFacing[2] = cosf( ( myROV->rotation[0] + myROV->handAngle ) * PI / 180 );
                 break;
             
             case '\\':
-                armLight->angle -= 1;
-                if( armLight->angle < -360.0 ) armLight->angle = 0.0;
+                myROV->handAngle -= 1;
+                if( myROV->handAngle < -360.0 ) myROV->handAngle = 0.0;
+                myROV->handFacing[0] = sinf( ( myROV->rotation[0] + myROV->handAngle ) * PI / 180 );
+                myROV->handFacing[2] = cosf( ( myROV->rotation[0] + myROV->handAngle ) * PI / 180 );
                 break;
         }
     }

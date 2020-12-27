@@ -5,6 +5,8 @@ class ROV
         vector<pair<float, float>> limitPos;
         vector<float> rotation;
         vector<float> facing;
+        vector<float> handFacing;
+        float handAngle;
         vector<float> acceleration;
         vector<float> speed;
         vector<bool> isMoving;
@@ -21,6 +23,7 @@ class ROV
         vector<vector<float>> diffuse;
         vector<vector<float>> specular;
         vector<float> shininess;
+        vector<float> armEmission;
 
         ROV(): pos( { 20.0, 25.0, 20.0 } ),
                limitPos( {{ -2000.0, 2000.0 }, 
@@ -28,6 +31,8 @@ class ROV
                           { -2000.0, 2000.0 }} ),
                rotation( { 0.0, 0.0, 1.0, 0.0 } ),
                facing( { 0.0, 0.0, 1.0 } ),
+               handFacing( { 0.0, 0.0, 1.0 } ),
+               handAngle( 0.0 ),
                acceleration( { 0.0, 0.0, 0.0 } ),
                speed( { 0.0, 0.0, 0.0 } ),
                isMoving( { false, false, false } ),
@@ -99,6 +104,8 @@ class ROV
             {
                 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0, 64.0
             };
+
+            armEmission = { 0.5, 0.5, 0.5, 1.0 };
         }
 
         void setBlockPoint();
@@ -234,7 +241,7 @@ void ROV::drawROV()
     setBlockPoint();
     if( toDrawBlock )
     {
-        // drawBlock();
+        drawBlock();
         drawViewVolume();
     }
 
@@ -420,7 +427,24 @@ void ROV::drawArm()
 
         glPushMatrix();
             glTranslatef( 0.0, 0.0, armLength );
-            gluSphere( sphere, 1, 12, 12 );
+            glPushMatrix();
+                gluSphere( sphere, 1, 12, 12 );
+                glRotatef( -90.0, 1.0, 0.0, 0.0 );
+                gluCylinder( cylinder, 1, 1, 5, 12, 3 );
+                glTranslatef( 0.0, 0.0, 5.0 );
+                glRotatef( 90.0, 1.0, 0.0, 0.0 );
+                glRotatef( handAngle, 0.0, 1.0, 0.0 );
+                gluSphere( sphere, 1, 12, 12 );
+                if( armOn )
+                    glMaterialfv( GL_FRONT, GL_EMISSION, &(armEmission[0]) );
+                glMaterialfv( GL_FRONT, GL_AMBIENT, &(ambient[3][0]) );
+                glMaterialfv( GL_FRONT, GL_DIFFUSE, &(diffuse[3][0]) );
+                glMaterialfv( GL_FRONT, GL_SPECULAR, &(specular[3][0]) );
+                glMaterialf( GL_FRONT, GL_SHININESS, shininess[3] );
+                glTranslatef( 0.0, 0.0, 0.5 );
+                gluSphere( sphere, 1, 12, 12 );
+                glMaterialfv( GL_FRONT, GL_EMISSION, noEmission );
+            glPopMatrix();
 
             glMaterialfv( GL_FRONT, GL_AMBIENT, &(ambient[9][0]) );
             glMaterialfv( GL_FRONT, GL_DIFFUSE, &(diffuse[9][0]) );
@@ -687,6 +711,9 @@ void ROV::setFacing()
 {
     facing[0] = sinf( rotation[0] * PI / 180 );
     facing[2] = cosf( rotation[0] * PI / 180 );
+
+    myROV->handFacing[0] = sinf( ( myROV->rotation[0] + myROV->handAngle ) * PI / 180 );
+    myROV->handFacing[2] = cosf( ( myROV->rotation[0] + myROV->handAngle ) * PI / 180 );
 }
 
 float ROV::distance( float x, float y, float z )
