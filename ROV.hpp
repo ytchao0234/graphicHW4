@@ -241,7 +241,7 @@ void ROV::drawROV()
     setBlockPoint();
     if( toDrawBlock )
     {
-        drawBlock();
+        // drawBlock();
         drawViewVolume();
     }
 
@@ -542,7 +542,8 @@ void ROV::drawViewVolume()
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    glColor3f( 0.0, 1.0, 1.0 );
+    static float cyan[4] = { 0.0, 1.0, 1.0, 1.0 };
+    glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, cyan );
     glBegin( GL_LINES );
         glVertex3f( camera[0], camera[1], camera[2] );
         glVertex3f( farLeftHigh[0], farLeftHigh[1], farLeftHigh[2] );
@@ -562,7 +563,8 @@ void ROV::drawViewVolume()
     glEnable( GL_BLEND );
     glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
     
-    glColor4f( 1.0, 1.0, 0.0, 0.2 );
+    static float yellow[4] = { 1.0, 1.0, 0.0, 0.5 };
+    glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, yellow );
     glBegin( GL_POLYGON );
         glVertex3f( camera[0], camera[1], camera[2] );
         glVertex3f( farLeftHigh[0], farLeftHigh[1], farLeftHigh[2] );
@@ -589,7 +591,8 @@ void ROV::drawViewVolume()
 
     glDisable( GL_BLEND );
 
-    glColor3f( 1.0, 0.0, 0.0 );
+    static float red[4] = { 1.0, 0.0, 0.0, 1.0 };
+    glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, red );
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     glBegin( GL_POLYGON );
