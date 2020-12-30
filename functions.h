@@ -35,6 +35,7 @@ vector<float> randomColor( bool = true );
 vector<float> randomPos();
 void initFloor();
 void drawFloor();
+void drawCave();
 void initFishes();
 void initFishBlock( int );
 void drawFishes();

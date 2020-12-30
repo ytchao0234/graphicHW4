@@ -149,8 +149,8 @@ void setLight()
 
     glLightModeli( GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE );
     glLightModelfv( GL_LIGHT_MODEL_AMBIENT, global_ambient );
-    // glCullFace( GL_BACK );
-    // glEnable( GL_CULL_FACE );
+    glCullFace( GL_BACK );
+    glEnable( GL_CULL_FACE );
 
     glEnable( GL_LIGHT0 );
     glEnable( GL_LIGHT1 );

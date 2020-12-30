@@ -35,6 +35,9 @@ float perspectiveEye = 90.0;
 float perspectiveNear = 1.5, perspectiveFar = 400.0;
 bool sunOn = true, fishOn = true, armOn = true;
 bool sunMove = true;
+vector<float> caveDirect = { sinf( (float)56.0 * PI / (float)180.0 ),
+                             0.0,
+                             cosf( (float)56.0 * PI / (float)180.0 ) };
 
 enum KEYBOARD
 {

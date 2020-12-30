@@ -25,6 +25,7 @@ void drawScene()
     glMaterialf( GL_FRONT, GL_SHININESS, noShininess );
     drawWCS();
     drawFloor();
+    drawCave();
     drawFishes();
     drawStones();
     drawCups();
@@ -118,6 +119,22 @@ void drawFloor()
             glEnd();
         }
     }
+}
+
+void drawCave()
+{
+    glDisable(GL_CULL_FACE);
+    static float caveColor[4] = { 0.2, 0.2, 0.2, 1.0 };
+    glPushMatrix();
+        glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, caveColor );
+        glTranslatef( 528, 0.0, 687 );
+        gluCylinder( cylinder, 100, 100, 1000, 12, 3 );
+        gluCylinder( cylinder, 85, 85, 1000, 12, 3 );
+        gluDisk( circleObj, 85, 100, 12, 1 );
+        glTranslatef( 0.0, 0.0, 1000 );
+        gluDisk( circleObj, 85, 100, 12, 1 );
+    glPopMatrix();
+    glEnable(GL_CULL_FACE);
 }
 
 vector<float> randomPos()
@@ -408,6 +425,7 @@ void initCups()
 
 void drawCups()
 {
+    glDisable( GL_CULL_FACE );
     for( int i = 0; i < cupPara.size(); i++ )
     {
         if( myROV->distance( cupPara[i][0], myROV->pos[1], cupPara[i][1] ) > 200.0 )
@@ -421,4 +439,5 @@ void drawCups()
                  cupPara[i][5], 
                  cupPara[i][6] );
     }
+    glEnable( GL_CULL_FACE );
 }
