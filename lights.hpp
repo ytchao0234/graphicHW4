@@ -23,7 +23,7 @@ class SunLight
         position[1] = sinf( (90.0-angle) * PI / 180.0 );
 
         angle += 0.1;
-        time += 24;
+        time += 24; // 86400 / 3600
 
         if( angle > 90.0 && angle < 270.0 )
         {

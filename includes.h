@@ -39,6 +39,7 @@ vector<float> caveDirect = { sinf( (float)56.0 * PI / (float)180.0 ),
                              0.0,
                              cosf( (float)56.0 * PI / (float)180.0 ) };
 
+float m[16];
 enum KEYBOARD
 {
     ESC = 27, SPACE = 32

@@ -726,17 +726,17 @@ void ROV::setFacing()
     facing[0] = sinf( rotation[0] * PI / 180 );
     facing[2] = cosf( rotation[0] * PI / 180 );
 
-    myROV->handFacing[1] = handFacing[1] = sinf( handAngle[1] * PI / 180 );
-    if( myROV->handAngle[1] > 90.0 )
-    {
-        myROV->handFacing[0] = -sinf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
-        myROV->handFacing[2] = -cosf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
-    }
-    else
-    {
-        myROV->handFacing[0] = sinf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
-        myROV->handFacing[2] = cosf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
-    }
+    glPushMatrix();
+        glLoadIdentity();
+        glRotatef( rotation[0] + handAngle[2], 0.0, 1.0, 0.0 );
+        glRotatef( handAngle[1], -1.0, 0.0, 0.0 );
+
+        glGetFloatv( GL_MODELVIEW_MATRIX, m );
+    glPopMatrix();
+
+    handFacing[0] = m[8];
+    handFacing[1] = m[9];
+    handFacing[2] = m[10];
 }
 
 float ROV::distance( float x, float y, float z )

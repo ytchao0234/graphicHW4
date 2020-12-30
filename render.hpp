@@ -307,55 +307,27 @@ void pressing()
                 break;
 
             case '-':
-                myROV->handAngle[2] += 1;
+                myROV->handAngle[2] += 2;
                 if( myROV->handAngle[2] > 360.0 ) myROV->handAngle[2] = 0.0;
-                if( myROV->handAngle[1] > 90.0 )
-                {
-                    myROV->handFacing[0] = -sinf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
-                    myROV->handFacing[2] = -cosf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
-                }
-                else
-                {
-                    myROV->handFacing[0] = sinf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
-                    myROV->handFacing[2] = cosf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
-                }
+                myROV->setFacing();
                 break;
             
             case '=':
-                myROV->handAngle[2] -= 1;
+                myROV->handAngle[2] -= 2;
                 if( myROV->handAngle[2] < -360.0 ) myROV->handAngle[2] = 0.0;
-                if( myROV->handAngle[1] > 90.0 )
-                {
-                    myROV->handFacing[0] = -sinf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
-                    myROV->handFacing[2] = -cosf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
-                }
-                else
-                {
-                    myROV->handFacing[0] = sinf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
-                    myROV->handFacing[2] = cosf( ( myROV->rotation[0] + myROV->handAngle[2] ) * PI / 180 );
-                }
+                myROV->setFacing();
                 break;
 
             case '9':
-                myROV->handAngle[1] += 1;
+                myROV->handAngle[1] += 2;
                 if( myROV->handAngle[1] > 210.0 ) myROV->handAngle[1] = 210.0;
-                myROV->handFacing[1] = sinf( myROV->handAngle[1] * PI / 180 );
-                if( fabsf(myROV->handAngle[1] - 90.0) <= 0.1 )
-                {
-                    myROV->handFacing[0] = -myROV->handFacing[0];
-                    myROV->handFacing[2] = -myROV->handFacing[2];
-                }
+                myROV->setFacing();
                 break;
 
             case '0':
-                myROV->handAngle[1] -= 1;
+                myROV->handAngle[1] -= 2;
                 if( myROV->handAngle[1] < -30.0 ) myROV->handAngle[1] = -30.0;
-                myROV->handFacing[1] = sinf( myROV->handAngle[1] * PI / 180 );
-                if( fabsf(myROV->handAngle[1] - 90.0) <= 0.1 )
-                {
-                    myROV->handFacing[0] = -myROV->handFacing[0];
-                    myROV->handFacing[2] = -myROV->handFacing[2];
-                }
+                myROV->setFacing();
                 break;
 
             case 'p':
