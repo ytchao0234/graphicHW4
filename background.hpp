@@ -128,11 +128,11 @@ void drawCave()
     glPushMatrix();
         glMaterialfv( GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, caveColor );
         glTranslatef( 528, 0.0, 687 );
-        gluCylinder( cylinder, 100, 100, 1000, 12, 3 );
-        gluCylinder( cylinder, 85, 85, 1000, 12, 3 );
-        gluDisk( circleObj, 85, 100, 12, 1 );
+        gluCylinder( cylinder, 100, 100, 1000, 50, 3 );
+        gluCylinder( cylinder, 85, 85, 1000, 50, 3 );
+        gluDisk( circleObj, 85, 100, 50, 1 );
         glTranslatef( 0.0, 0.0, 1000 );
-        gluDisk( circleObj, 85, 100, 12, 1 );
+        gluDisk( circleObj, 85, 100, 50, 1 );
     glPopMatrix();
     glEnable(GL_CULL_FACE);
 }

@@ -59,11 +59,11 @@ class FishLight
     FishLight():
         position{ -75.0, 100.0, -75.0, 1.0 },
         ambient { 0.2, 0.2, 0.2, 1.0 },
-        diffuse { 0.7, 0.7, 0.7, 1.0 },
+        diffuse { 0.6, 0.6, 0.6, 1.0 },
         specular{ 0.4, 0.4, 0.4, 1.0 },
         quadratic( 0.0001 ),
         linear( 0.01 ),
-        constant( 0.0 ),
+        constant( 1.0 ),
         color(W)
     {}
 
@@ -118,12 +118,12 @@ class ArmLight
         direction{ myROV->facing[0], myROV->facing[1], myROV->facing[2], 0.0 },
         cutoff   ( 75.0 ),
         diffuse  { 1.0, 1.0, 1.0, 1.0 },
-        specular { 0.3, 0.3, 0.3, 1.0 },
+        specular { 1.0, 1.0, 1.0, 1.0 },
         exponent ( 3.0 ),
         angle( 0.0 ),
-        quadratic( 0.00001 ),
-        linear( 0.005 ),
-        constant( 0.0 )
+        quadratic( 0.0000001 ),
+        linear( 0.0000001 ),
+        constant( 0.5 )
     {}
 
     void setPos()
@@ -148,6 +148,7 @@ void setLight()
     glEnable( GL_LIGHTING );
 
     glLightModeli( GL_LIGHT_MODEL_LOCAL_VIEWER, GL_TRUE );
+    glLightModeli( GL_LIGHT_MODEL_TWO_SIDE, GL_TRUE );
     glLightModelfv( GL_LIGHT_MODEL_AMBIENT, global_ambient );
     glCullFace( GL_BACK );
     glEnable( GL_CULL_FACE );

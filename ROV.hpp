@@ -652,6 +652,14 @@ void ROV::boundPos()
 
     if( pos[2] < limitPos[2].first )       pos[2] = limitPos[2].first;
     else if( pos[2] > limitPos[2].second ) pos[2] = limitPos[2].second;
+
+    if( pos[0] <= 600 && pos[0] >= 450 && pos[1] < 110 && pos[2] <= 1680 && pos[2] >= 690 )
+    {
+        if( pos[0] < 470 )      pos[0] = 470;
+        else if( pos[0] > 580 ) pos[0] = 580;
+
+        if( pos[1] > 55 )       pos[1] = 55;
+    }
 }
 
 void ROV::boundArmLength()
